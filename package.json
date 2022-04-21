@@ -1,0 +1,20 @@
+{
+  "name": "phylodiff",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franciscoludovico/phylodiff.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/franciscoludovico/phylodiff/issues"
+  },
+  "homepage": "https://github.com/franciscoludovico/phylodiff#readme"
+}
