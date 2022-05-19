@@ -1,0 +1,403 @@
+
+.corner_placeholder {
+    position: absolute;
+    display: flex;
+    padding: 8px;
+    z-index:10;
+}
+
+.top { top: 0; }
+.right { right: 0; }
+.left { left: 0; }
+.bottom { bottom: 0 }
+
+.square_button{
+    border-radius: 8px;
+    border:none;
+    padding: 8px;
+    cursor: pointer;
+    background-color: rgba(239, 239, 239, 0.95);
+    color:#555;
+}
+
+.square_button:hover{
+    background-color: #ddd;
+}
+
+/* TOGGLE */
+
+.screen_toggle{
+    cursor: default;
+    background-color: #ffffff;
+margin-left: 4px;
+border-radius : 0px;
+    padding-bottom: 0px ;
+    padding-top: 0px ;
+}
+
+.screen_toggle:hover{
+    background-color: #ffffff;
+}
+
+*[id^="button_edit_name_trash"]{
+    display: none;
+        border-radius: 0px;
+        background-color: #dc3545;
+        margin-left: 4px;
+        margin-right: 4px;
+}
+
+*[id^="button_edit_name_check"]{
+display: none;
+border-radius: 0px;
+background-color: #198754;
+}
+
+/* BRANCH SCALE */
+
+.scale_line{
+    stroke-width:  1.2;
+    stroke: #555;
+}
+
+.scale_text{
+
+}
+
+/* SEARCH */
+
+.search_input{
+    border: 1px solid #ddd;
+    border-right: none;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    margin: 2px;
+    margin-right: 0;
+    background-color: white;
+    border-top-right-radius : 0;
+    border-bottom-right-radius : 0;
+    /*height: 13px !important;*/
+}
+
+.search_input:hover{background-color: white;}
+
+.search_button {
+    margin: 2px;
+    margin-left: 0 !important;
+
+}
+
+/* TOP RIGHT SUB MENU */
+
+.tr-buttons{
+    flex-direction: column;
+    align-self: end;
+    display: flex;}
+
+.tr-buttons  * {
+    align-self: flex-end;
+}
+
+.tr-menus{
+    display: flex;
+    flex-direction: column;
+    margin-left: 4px;
+
+}
+
+.tr-menus > div {
+    align-self: flex-end;
+    width: 100%;
+    margin: 2px;
+    background-color: rgba(239, 239, 239, 0.95);
+    display: none;
+}
+
+.menu_export{
+    border-radius: 4px;
+
+
+}
+
+
+.menu_export > div > button {
+    background-color: white;
+}
+
+/* Accordion system for settings */
+.menu_settings{
+    border-radius: 4px;
+    background-color: #aaa;
+    overflow-y: scroll;
+    max-height:95vh;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.menu_settings::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+    background-color: #ccc;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    background-color: rgba(250, 250, 250, 0.98) !important;
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+
+}
+
+.accordion:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+/* SLIDER */
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 12px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 12px; /* Set a specific slider handle width */
+    height: 12px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 12px; /* Set a specific slider handle width */
+    height: 12px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+/* TOGGLE */
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider_t {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider_t:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider_t {
+    background-color: #2196F3;
+}
+
+input:focus + .slider_t {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider_t:before {
+    -webkit-transform: translateX(10px);
+    -ms-transform: translateX(10px);
+    transform: translateX(10px);
+}
+
+/* Rounded sliders */
+.slider_t.round {
+    border-radius: 20px;
+}
+
+.slider_t.round:before {
+    border-radius: 50%;
+}
+
+
+
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+}
+
+
+.autocomplete-items {
+    position: absolute;
+    border: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    right: 0;
+}
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: rgba(250, 250, 250, 0.98);
+
+}
+.autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: #e9e9e9;
+}
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
+
+
+.d3-tip {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.4;
+    padding: 20px;
+    pointer-events: none !important;
+    color: #203d5d;
+    box-shadow: 0 4px 20px 4px rgba(0, 20, 60, .1), 0 4px 80px -8px rgba(0, 20, 60, .2);
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: #fff;
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Northward tooltips */
+.d3-tip.n:after {
+    content: "▼";
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+    text-align: center;
+}
+
+/* Eastward tooltips */
+.d3-tip.e:after {
+    content: "◀";
+    margin: -4px 0 0 0;
+    top: 50%;
+    left: -8px;
+}
+
+/* Southward tooltips */
+.d3-tip.s:after {
+    content: "▲";
+    margin: 0 0 1px 0;
+    top: -8px;
+    left: 0;
+    text-align: center;
+}
+
+/* Westward tooltips */
+.d3-tip.w:after {
+    content: "▶";
+    margin: -4px 0 0 -1px;
+    top: 50%;
+    left: 100%;
+}
+
+body {font-family: Arial, Helvetica, sans-serif;}
+
+.dropdrop{
+    position: relative;
+    display: none;
+    margin-top: -24px;
+
+}
+
+.modal{
+    z-index: 1000000000 !important;
+}
+
+.dashed_button{
+    background-color: white;
+    border: 2px dashed #ddd;
+    border-radius: 50px;
+}
+
+
+

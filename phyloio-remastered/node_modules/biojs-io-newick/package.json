@@ -1,0 +1,35 @@
+{
+  "name": "biojs-io-newick",
+  "description": "Parses newick strings into JSON and JSON into newick",
+  "version": "1.5.0",
+  "homepage": "http://github.com/biojs/biojs",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/daviddao/biojs-io-newick"
+  },
+  "author": {
+    "name": "David",
+    "email": "biojs-technical@googlegroups.com"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "~4.2.0",
+    "uglify-js": "~2.4.15",
+    "mocha": "~1.20.1",
+    "should": "~4.0.4",
+    "chai": "~1.9.1"
+  },
+  "keywords": [
+    "biojs", "parser", "newick", "extended newick"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "start": "browserify -r ./:biojs-io-newick> build/biojs-io-newick.min.js"
+  },
+  "license": "Apache 2",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/biojs/biojs2/issues"
+  }
+}
