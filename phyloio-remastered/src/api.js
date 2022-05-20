@@ -4,7 +4,7 @@ const { build_table, reroot_hierarchy, screen_shot } = require('./utils.js')
 import keyboardManager from './keyboardManager.js'
 import FileSaver from 'file-saver' ;
 import bitset, {BitSet} from 'bitset';
-
+var HashMap = require('hashmap')
 // class to handle user interaction to init and set up phyloIO instance
 export default class API { // todo ultime ! phylo is used ase reference from .html not goood
 
@@ -213,20 +213,50 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             return
         }
         if(this.available_metrics.RDF) console.log('RDF')
-        var RDF = compute_RF_distance(mod1.createDeepLeafList(),mod2.createDeepLeafList())
+        var RDF = compute_RF_distance(mod1.hierarchy_mockup,mod2.hierarchy_mockup)
 
-        function compute_RF_distance(tree1,tree2){
-            var idSet = "placeholder"
-            var clTree1 = getClusters(tree1,idSet)
-            var clTree2 = getClusters(tree2,idSet)
-            var bs = new BitSet()
+        function compute_RF_distance(mockup1,mockup2){
+            var idSet = mockup1.leaves()
+            var clTree1 = getClusters(mockup1.data,idSet)
+            //var clTree2 = getClusters(mockup2.data,idSet)
 
-            function getClusters(tree1,idSet){
+            function getClusters(tree,idSet){
                 console.log('Got here')
+                var map = new HashMap()
+                var node = get_next_node(tree)
+                var cnt = 0
+                do {
+                    cnt++
+                    node = get_next_node(node)
+                } while (node.root == undefined)
+                console.log(cnt)
             }
 
         }
 
+
+        function get_next_node(tree) {
+
+            if(tree.root == true) {
+
+                while (tree.children != undefined) {
+                    tree = tree.children[0]
+                }
+                return tree
+            }
+
+            if(tree.children == undefined) {
+                var parent = tree.parent
+                if(parent.children.length == 1 || parent.children[1] == tree) return parent
+                tree = parent.children[1]
+            }
+
+            while (tree.children != undefined) {
+                tree = tree.children[0]
+            }
+            return tree
+
+        }
     }
 
     /*
