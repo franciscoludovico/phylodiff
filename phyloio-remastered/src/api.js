@@ -197,6 +197,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         var leaves1 = mod1.hierarchy_mockup.leaves().map(x => x.data.name);
         var leaves2 = mod2.hierarchy_mockup.leaves().map(x => x.data.name);
         //TODO Should know available metrics on tree add
+        //TODO Model Settings and api settings
         var intersection = leaves1.filter(value => leaves2.includes(value));
 
         if (intersection.length == 0){
@@ -215,6 +216,10 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         if(this.available_metrics.RDF) console.log('RDF')
         var RDF = compute_RF_distance(mod1.hierarchy_mockup,mod2.hierarchy_mockup)
 
+
+        //Idset is leaf array should be Hashmap
+        //Change prototype function for leaves
+
         function compute_RF_distance(mockup1,mockup2){
             var idSet = mockup1.leaves()
             var clTree1 = getClusters(mockup1.data,idSet)
@@ -227,6 +232,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 var cnt = 0
                 do {
                     cnt++
+                    bitset = new BitSet()
+                    if(node.name != undefined) //TODO
                     node = get_next_node(node)
                 } while (node.root == undefined)
                 console.log(cnt)
@@ -234,23 +241,16 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
         }
 
-
+        //Add to prototype
         function get_next_node(tree) {
 
-            if(tree.root == true) {
-
-                while (tree.children != undefined) {
-                    tree = tree.children[0]
+            if(tree.root == undefined || tree.root == false) {
+                if (tree.parent != undefined) {
+                    var parent = tree.parent
+                    if (parent.children.length == 1 || parent.children[1] == tree) return parent
+                    tree = parent.children[1]
                 }
-                return tree
             }
-
-            if(tree.children == undefined) {
-                var parent = tree.parent
-                if(parent.children.length == 1 || parent.children[1] == tree) return parent
-                tree = parent.children[1]
-            }
-
             while (tree.children != undefined) {
                 tree = tree.children[0]
             }
