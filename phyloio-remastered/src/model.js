@@ -95,7 +95,8 @@ export default class Model {
         this.leaves = []
         this.similarity = []; // list of models id already process for topology BCN
 
-
+        //number of nodes in model
+        var node_count = 0
 
         if (from_raw_data){
         this.data = this.factory(this.parse());
@@ -107,6 +108,11 @@ export default class Model {
                 n.leaves = this.get_leaves(n)
             })
         }
+
+        //adds id to each node in model
+        this.traverse(this.data, function (node, children){
+            node.id = node_count++
+        })
 
         this.data.root = true;
         this.rooted = this.data.children.length !== 3

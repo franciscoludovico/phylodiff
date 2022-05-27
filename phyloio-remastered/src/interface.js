@@ -17,6 +17,8 @@ export default class Interface {
 
         }
 
+
+
         var empty_mode = (typeof empty_mode !== 'undefined') ? empty_mode : false;
 
         this.scale_pixel_length = 120;

@@ -3,7 +3,7 @@ import Container from './container.js'
 const { build_table, reroot_hierarchy, screen_shot } = require('./utils.js')
 import keyboardManager from './keyboardManager.js'
 import FileSaver from 'file-saver' ;
-import bitset, {BitSet} from 'bitset';
+var BitSet = require('bitset')
 var HashMap = require('hashmap')
 // class to handle user interaction to init and set up phyloIO instance
 export default class API { // todo ultime ! phylo is used ase reference from .html not goood
@@ -222,7 +222,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         //Change prototype function for leaves
 
         function compute_RF_distance(mockup1,mockup2){
-            var list = mockup1.deepLeafList()
+            var list = mockup1.data.deepLeafList
             const idSet = new HashMap()
             for (let i = 0; i < list.length; i++) {
                 idSet.set(list[i],i)
@@ -230,26 +230,46 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             var clTree1 = getClusters(mockup1.data,idSet)
             var clTree2 = getClusters(mockup2.data,idSet)
 
-            function getClusters(tree,idSet){
-                console.log('Got here')
+            var shared_clusters = 0
+            const total_clusters = clTree1.size + clTree2.size
+
+            clTree1.forEach(function(value, key) {
+                if(clTree2.search(value) != null) {
+                    shared_clusters++
+                }
+            })
+
+            var rfDistance = -1
+
+            if(shared_clusters < total_clusters) {
+                rfDistance = (total_clusters - shared_clusters) / 2
+            }
+            console.log('rfDistance = ' + rfDistance)
+
+            function getClusters(tree,idSet) {
                 var clusterMap = new HashMap()
                 var node = get_next_node(tree)
-                var cnt = 0
                 do {
-                    cnt++
-                    bitset = new BitSet()
+                    var bs = new BitSet()
                     if(node.hasOwnProperty('name')) {
                         var id = idSet.get(node.name)
-                        bitset.set(id)
+                        bs.set(id,1)
                     }
                     if(node.hasOwnProperty('children')){
                         if(node.children.length > 0){
-                            node.children[0]
+                            var bsLeft = clusterMap.get(node.children[0].id)
+                            bs.or(bsLeft)
+
+                            if(node.children.length > 1) {
+                                var bsRight = clusterMap.get(node.children[1].id)
+                                bs.or(bsRight)
+                            }
                         }
                     }
+                    clusterMap.set(node.id, bs)
                     node = get_next_node(node)
                 } while (node.root == undefined)
-                console.log(cnt)
+                return clusterMap
             }
 
         }
