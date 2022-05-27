@@ -214,6 +214,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             return
         }
         if(this.available_metrics.RDF) console.log('RDF')
+        mod1.createDeepLeafList()
         var RDF = compute_RF_distance(mod1.hierarchy_mockup,mod2.hierarchy_mockup)
 
 
@@ -221,19 +222,31 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         //Change prototype function for leaves
 
         function compute_RF_distance(mockup1,mockup2){
-            var idSet = mockup1.leaves()
+            var list = mockup1.deepLeafList()
+            const idSet = new HashMap()
+            for (let i = 0; i < list.length; i++) {
+                idSet.set(list[i],i)
+            }
             var clTree1 = getClusters(mockup1.data,idSet)
-            //var clTree2 = getClusters(mockup2.data,idSet)
+            var clTree2 = getClusters(mockup2.data,idSet)
 
             function getClusters(tree,idSet){
                 console.log('Got here')
-                var map = new HashMap()
+                var clusterMap = new HashMap()
                 var node = get_next_node(tree)
                 var cnt = 0
                 do {
                     cnt++
                     bitset = new BitSet()
-                    if(node.name != undefined) //TODO
+                    if(node.hasOwnProperty('name')) {
+                        var id = idSet.get(node.name)
+                        bitset.set(id)
+                    }
+                    if(node.hasOwnProperty('children')){
+                        if(node.children.length > 0){
+                            node.children[0]
+                        }
+                    }
                     node = get_next_node(node)
                 } while (node.root == undefined)
                 console.log(cnt)
