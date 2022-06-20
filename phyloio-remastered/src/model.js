@@ -3,6 +3,8 @@ import * as d3 from "d3";
 var uid_model = 0
 var uid_untitle_counter = 0
 import * as parser from 'biojs-io-newick';
+var BitSet = require('bitset')
+var HashMap = require('hashmap')
 const { build_table, parse_nhx } = require('./utils.js')
 
 export default class Model {
@@ -112,6 +114,21 @@ export default class Model {
         //adds id to each node in model
         this.traverse(this.data, function (node, children){
             node.id = node_count++
+            node.get_next_node = function (){
+                var tree = this
+                if(!tree.hasOwnProperty('root') || tree.root === false) {
+                    if (tree.hasOwnProperty('parent')) {
+                        var parent = tree.parent
+                        if (parent.children.length === 1 || parent.children[1] === tree) return parent
+                        tree = parent.children[1]
+                    }
+                }
+                while (tree.hasOwnProperty('children')) {
+                    tree = tree.children[0]
+                }
+                return tree
+
+            }
         })
 
         this.data.root = true;
@@ -180,6 +197,32 @@ export default class Model {
 
         return o
 
+    }
+
+    getClusters(idSet) {
+        var clusterMap = new HashMap()
+        var node = this.data
+        do {
+            node = node.get_next_node()
+            var bs = new BitSet("0")
+            if(node.hasOwnProperty('name') && node.name != "") {
+                var id = idSet.get(node.name)
+                bs.set(id,1)
+            }
+            if(node.hasOwnProperty('children')){
+                if(node.children.length > 0){
+                    var bsLeft = clusterMap.get(node.children[0].id)
+                    bs = bs.or(bsLeft)
+
+                    if(node.children.length > 1) {
+                        var bsRight = clusterMap.get(node.children[1].id)
+                        bs = bs.or(bsRight)
+                    }
+                }
+            }
+            clusterMap.set(node.id, bs)
+        } while (!node.hasOwnProperty('root'))
+        return clusterMap
     }
 
     traverse_hierarchy(o,func_pre, func_post) {
@@ -339,6 +382,7 @@ export default class Model {
                 n.correspondingLeaf = {}
 
             }
+
 
             n.leaves = this.get_leaves(n)
 

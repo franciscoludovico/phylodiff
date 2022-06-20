@@ -215,20 +215,21 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         }
         if(this.available_metrics.RDF) console.log('RDF')
         mod1.createDeepLeafList()
-        var RDF = compute_RF_distance(mod1.hierarchy_mockup,mod2.hierarchy_mockup)
-
+        var RDF = compute_RF_distance(mod1,mod2)
+        console.log('rfDistance = ' + RDF)
 
         //Idset is leaf array should be Hashmap
         //Change prototype function for leaves
 
-        function compute_RF_distance(mockup1,mockup2) {
-            var list = mockup1.data.deepLeafList
+        function compute_RF_distance(mod1,mod2) {
+            var list = mod1.data.deepLeafList
             const idSet = new HashMap()
             for (let i = 0; i < list.length; i++) {
                 idSet.set(list[i], i)
             }
-            var clTree1 = getClusters(mockup1.data, idSet)
-            var clTree2 = getClusters(mockup2.data, idSet)
+
+            var clTree1 = mod1.getClusters(idSet)
+            var clTree2 = mod2.getClusters(idSet)
 
             var shared_clusters = 0
             const total_clusters = clTree1.size + clTree2.size
@@ -248,52 +249,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             if(shared_clusters < total_clusters) {
                 rfDistance = (total_clusters - shared_clusters*2) / 2
             }
-            console.log('rfDistance = ' + rfDistance)
+
             return rfDistance
-
-            function getClusters(tree,idSet) {
-                var clusterMap = new HashMap()
-                var node = tree
-                do {
-                    node = get_next_node(node)
-                    var bs = new BitSet("0")
-                    if(node.hasOwnProperty('name') && node.name != "") {
-                        var id = idSet.get(node.name)
-                        bs.set(id,1)
-                    }
-                    if(node.hasOwnProperty('children')){
-                        if(node.children.length > 0){
-                            var bsLeft = clusterMap.get(node.children[0].id)
-                            bs = bs.or(bsLeft)
-
-                            if(node.children.length > 1) {
-                                var bsRight = clusterMap.get(node.children[1].id)
-                                bs = bs.or(bsRight)
-                            }
-                        }
-                    }
-                    clusterMap.set(node.id, bs)
-                } while (!node.hasOwnProperty('root'))
-                return clusterMap
-            }
-
-        }
-
-        //Add to prototype
-        function get_next_node(tree) {
-
-            if(!tree.hasOwnProperty('root') || tree.root === false) {
-                if (tree.hasOwnProperty('parent')) {
-                    var parent = tree.parent
-                    if (parent.children.length === 1 || parent.children[1] === tree) return parent
-                    tree = parent.children[1]
-                }
-            }
-            while (tree.hasOwnProperty('children')) {
-                tree = tree.children[0]
-            }
-            return tree
-
         }
     }
 
