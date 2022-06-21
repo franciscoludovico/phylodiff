@@ -216,7 +216,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         if(this.available_metrics.RDF) console.log('RDF')
         mod1.createDeepLeafList()
         var RDF = compute_RF_distance(mod1,mod2)
-        console.log('rfDistance = ' + RDF)
+        this.distance.RF = RDF
 
         //Idset is leaf array should be Hashmap
         //Change prototype function for leaves
