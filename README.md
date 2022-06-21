@@ -1,5 +1,5 @@
-# Phylo.io
-A web app and library for visualising and comparing phylogenetic trees.
+# PhyloDiff
+A web app (powered by [Phylo.io](https://beta.phylo.io/)) and library for visualising and comparing phylogenetic trees.
 
 ## Demo
 The app can be accessed at [beta.phylo.io](https://beta.phylo.io/).
