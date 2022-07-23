@@ -15,7 +15,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.session_url = null
         this.phylo_embedded = false
         this.available_metrics = {
-            'RDF' : true
+            'RDF' : false,
+            'WRF' : false
         }
         this.distance = {
             /*
@@ -212,10 +213,18 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
             return
         }
-        if(this.available_metrics.RDF) console.log('RDF')
+
         mod1.createDeepLeafList()
-        var RDF = compute_RF_distance(mod1,mod2)
-        this.distance.RF = RDF
+
+        if(this.available_metrics.RDF) {
+            var RDF = compute_RF_distance(mod1, mod2)
+            this.distance.RF = RDF
+        }
+
+        if(this.available_metrics.WRF) {
+            var WRF = compute_WRF_distance(mod1, mod2)
+            this.distance.WRF = WRF
+        }
 
         //Idset is leaf array should be Hashmap
         //Change prototype function for leaves
@@ -227,8 +236,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 idSet.set(list[i], i)
             }
 
-            var clTree1 = mod1.getClusters(idSet)
-            var clTree2 = mod2.getClusters(idSet)
+            var clTree1 = mod1.get_clusters_rf(idSet)
+            var clTree2 = mod2.get_clusters_rf(idSet)
 
             var shared_clusters = 0
             const total_clusters = clTree1.size + clTree2.size
@@ -250,6 +259,27 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             }
 
             return rfDistance
+        }
+
+        function compute_WRF_distance(mod1,mod2) {
+            var list = mod1.data.deepLeafList
+            const idSet = new HashMap()
+            for (let i = 0; i < list.length; i++) {
+                idSet.set(list[i], i)
+            }
+
+            let distanceMap = new HashMap()
+
+            var clTree1 = mod1.get_clusters_wrf(idSet,distanceMap)
+            var clTree2 = mod2.get_clusters_wrf(idSet,distanceMap)
+
+            var wrf_distance = 0
+
+            distanceMap.forEach(function (value, key) {
+                wrf_distance += Math.abs(value)
+            })
+
+            return wrf_distance
         }
     }
 

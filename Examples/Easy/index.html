@@ -37,10 +37,14 @@
 <div id="container2" style=" display: inline-block;width: 45%;margin:16px;height: 720px;background-color: #fff;">
 </div>
 
-<div id="rf_distance">
-    <button class="button">RF Distance</button>
+<div id="compute_distance">
+    <button class="button" id="rf_distance">RF Distance</button>
     <input class="input" type ="text" id ="rf_display" disabled >
+
+    <button class="button" id="wrf_distance">WRF Distance</button>
+    <input class="input" type ="text" id ="wrf_display" disabled >
 </div>
+
 
 <script>
 
@@ -60,12 +64,18 @@
 
     phylo.settings.compareMode = true;
     phylo.settings.compute_metrics = true;
+    phylo.available_metrics.RDF = true
+    phylo.available_metrics.WRF = true
     phylo.bound_container = [c1,c2];
     phylo.start()
     phylo.compute_metrics()
     document.getElementById("rf_distance").onclick = function() {
         document.getElementById("rf_display").value = phylo.distance.RF
-    };
+    }
+
+    document.getElementById("wrf_distance").onclick = function() {
+        document.getElementById("wrf_display").value = phylo.distance.WRF
+    }
 
 
 </script>

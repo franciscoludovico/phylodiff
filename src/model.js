@@ -199,7 +199,7 @@ export default class Model {
 
     }
 
-    getClusters(idSet) {
+    get_clusters_rf(idSet) {
         var clusterMap = new HashMap()
         var node = this.data
         do {
@@ -221,6 +221,43 @@ export default class Model {
                 }
             }
             clusterMap.set(node.id, bs)
+        } while (!node.hasOwnProperty('root'))
+        return clusterMap
+    }
+
+    get_clusters_wrf(idSet, distanceMap) {
+        var clusterMap = new HashMap()
+        var node = this.data
+        do {
+            node = node.get_next_node()
+            var bs = new BitSet("0")
+            if(node.hasOwnProperty('name') && node.name != "") {
+                var id = idSet.get(node.name)
+                bs.set(id,1)
+            }
+            if(node.hasOwnProperty('children')){
+                if(node.children.length > 0){
+                    var bsLeft = clusterMap.get(node.children[0].id)
+                    bs = bs.or(bsLeft)
+
+                    if(node.children.length > 1) {
+                        var bsRight = clusterMap.get(node.children[1].id)
+                        bs = bs.or(bsRight)
+                    }
+                }
+            }
+            clusterMap.set(node.id, bs)
+
+            if(!node.hasOwnProperty('root')) {
+                console.log(distanceMap.has(bs.toString()))
+                if(!distanceMap.has(bs.toString())) {
+                    distanceMap.set(bs.toString(), node.branch_length)
+                }
+                else {
+                   var currDist = distanceMap.get(bs.toString())
+                   distanceMap.set(bs.toString(), currDist - node.branch_length)
+                }
+            }
         } while (!node.hasOwnProperty('root'))
         return clusterMap
     }
