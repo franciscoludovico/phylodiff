@@ -62,6 +62,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.session_url = null
         this.phylo_embedded = false
         this.distance = {
+            /*
             'RF' : false,
             "Euc": false,
             "clade": false,
@@ -71,6 +72,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             "Cl_good" : false,
             "Cl_left" : false,
             "Cl_right" : false,
+
+             */
         };
         let default_settings = {
             'no_distance_message': true,
@@ -117,10 +120,6 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             /*if (this.settings.compute_distance){
                 this.compute_distance()
             }*/
-            if (this.settings.compute_metrics){
-                this.compute_metrics()
-            }
-
         }
 
         new keyboardManager(this);
