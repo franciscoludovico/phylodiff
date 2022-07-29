@@ -43,6 +43,9 @@
 
     <button class="button" id="wrf_distance">WRF Distance</button>
     <input class="input" type ="text" id ="wrf_display" disabled >
+
+    <button class="button" id="grf_distance">GRF Distance</button>
+    <input class="input" type ="text" id ="grf_display" disabled >
 </div>
 
 
@@ -75,6 +78,10 @@
 
     document.getElementById("wrf_distance").onclick = function() {
         document.getElementById("wrf_display").value = phylo.distance.WRF
+    }
+
+    document.getElementById("grf_distance").onclick = function() {
+        document.getElementById("grf_display").value = phylo.distance.GRF
     }
 
 

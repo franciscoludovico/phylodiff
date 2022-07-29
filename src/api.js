@@ -16,7 +16,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.phylo_embedded = false
         this.available_metrics = {
             'RDF' : false,
-            'WRF' : false
+            'WRF' : false,
+            'GRF' : false
         }
         this.leaf_info = {
             'intersect' : false,
