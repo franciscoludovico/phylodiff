@@ -18,6 +18,10 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             'RDF' : false,
             'WRF' : false
         }
+        this.leaf_info = {
+            'intersect' : false,
+            'include' : false
+        }
         this.distance = {
             /*
             'RF' : false,
@@ -43,7 +47,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             'syncing_zoom': false,
             "compareMode" : false, // compare for each pair of tree topological similarity
         };
-        this.undoing = false
+        this.undoing = false;
+        this.idSet = {}
 
 
     }
@@ -82,8 +87,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             "compareMode" : false, // compare for each pair of tree topological similarity
         };
         this.settings = {...this.settings, ...default_settings};
-        this.undoing = false
-
+        this.undoing = false;
 
     }
 
@@ -121,6 +125,35 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             /*if (this.settings.compute_distance){
                 this.compute_distance()
             }*/
+
+            let deep_leaf_list_1 = this.bound_container[0].models[this.bound_container[0].current_model].deep_leaf_list
+            let deep_leaf_list_2 = this.bound_container[1].models[this.bound_container[1].current_model].deep_leaf_list
+
+            if (deep_leaf_list_2 > deep_leaf_list_1) {
+                let temp = deep_leaf_list_2
+                deep_leaf_list_2 = deep_leaf_list_1
+                deep_leaf_list_1 = temp
+            }
+
+            let idSet = new HashMap()
+            let diff_counter = 0
+
+
+            deep_leaf_list_1.forEach( (value) => idSet.set(value,idSet.size) )
+            deep_leaf_list_2.forEach( (value) => {
+                    if(!idSet.has(value)) {
+                        idSet.set(value,idSet.size)
+                        diff_counter++
+                    }
+                }
+            )
+            if(diff_counter == 0) {
+                if (deep_leaf_list_1.length == deep_leaf_list_2.length) {
+                    this.leaf_info.intersect = true
+                }
+                this.leaf_info.include = true
+            }
+            this.idSet = idSet
         }
 
         new keyboardManager(this);
@@ -194,14 +227,14 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         var mod2 = this.bound_container[1].models[this.bound_container[1].current_model]
 
 
-        var leaves1 = mod1.hierarchy_mockup.leaves().map(x => x.data.name);
-        var leaves2 = mod2.hierarchy_mockup.leaves().map(x => x.data.name);
+        //var leaves1 = mod1.hierarchy_mockup.leaves().map(x => x.data.name);
+        //var leaves2 = mod2.hierarchy_mockup.leaves().map(x => x.data.name);
         //TODO Should know available metrics on tree add
         //TODO Model Settings and api settings
+        /*
         var intersection = leaves1.filter(value => leaves2.includes(value));
-
         if (intersection.length == 0){
-            /*
+
             this.settings.no_distance_message = "No leaves in common."
             this.distance.Euc = false
             this.distance.RF = false
@@ -209,32 +242,29 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
             if (this.phylo_embedded){
                 this.display_distance_window()
-            }*/
-
+            }
             return
         }
+        */
+        //mod1.createDeepLeafList()
 
-        mod1.createDeepLeafList()
 
-        if(this.available_metrics.RDF) {
-            var RDF = compute_RF_distance(mod1, mod2)
+
+        if(this.available_metrics.RDF && this.leaf_info.intersect) {
+            var RDF = compute_RF_distance(mod1, mod2, this.idSet)
             this.distance.RF = RDF
         }
 
-        if(this.available_metrics.WRF) {
-            var WRF = compute_WRF_distance(mod1, mod2)
+        if(this.available_metrics.WRF && this.leaf_info.intersect) {
+            var WRF = compute_WRF_distance(mod1, mod2,this.idSet)
             this.distance.WRF = WRF
         }
 
         //Idset is leaf array should be Hashmap
         //Change prototype function for leaves
 
-        function compute_RF_distance(mod1,mod2) {
-            var list = mod1.data.deepLeafList
-            const idSet = new HashMap()
-            for (let i = 0; i < list.length; i++) {
-                idSet.set(list[i], i)
-            }
+        function compute_RF_distance(mod1,mod2, idSet) {
+
 
             var clTree1 = mod1.get_clusters_rf(idSet)
             var clTree2 = mod2.get_clusters_rf(idSet)
@@ -261,12 +291,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             return rfDistance
         }
 
-        function compute_WRF_distance(mod1,mod2) {
-            var list = mod1.data.deepLeafList
-            const idSet = new HashMap()
-            for (let i = 0; i < list.length; i++) {
-                idSet.set(list[i], i)
-            }
+        function compute_WRF_distance(mod1,mod2, idSet) {
 
             let distanceMap = new HashMap()
 

@@ -94,7 +94,8 @@ export default class Model {
 
         this.uid = uid_model++;
         this.input_data = data;
-        this.leaves = []
+        this.deep_leaf_list = []
+        //this.leaves = []
         this.similarity = []; // list of models id already process for topology BCN
 
         //number of nodes in model
@@ -105,15 +106,19 @@ export default class Model {
         }
         else{
             this.data = data
+            /*
             data.leaves = this.get_leaves(data)
             this.traverse(data, function(n,c){
                 n.leaves = this.get_leaves(n)
             })
+            */
+
         }
 
         //adds id to each node in model
         this.traverse(this.data, function (node, children){
             node.id = node_count++
+            if(node.hasOwnProperty('name')) this.deep_leaf_list.push(node.name)
             node.get_next_node = function (){
                 var tree = this
                 if(!tree.hasOwnProperty('root') || tree.root === false) {
@@ -270,7 +275,7 @@ export default class Model {
             func_pre.apply(this,[o,children])
         }
 
-        if(children ){
+        if(children){
 
             for (var c in children) {
 
@@ -414,6 +419,7 @@ export default class Model {
             if (n.depth > this.settings.tree.max_depth){
                 this.settings.tree.max_depth = n.depth
             }
+            /*
             if (!(n.hasOwnProperty('children'))){
                 this.leaves.push(n)
                 n.correspondingLeaf = {}
@@ -422,7 +428,7 @@ export default class Model {
 
 
             n.leaves = this.get_leaves(n)
-
+            */
         })
 
         this.suggestions = [] // autocomplete name
@@ -503,13 +509,13 @@ export default class Model {
     swap_subtrees(data){
          var e = data.children.pop()
         data.children.unshift(e)
-        data.leaves = this.get_leaves(data)
+        //data.leaves = this.get_leaves(data)
     }
 
     unswap_subtrees(data){
         var e = data.children.shift()
         data.children.push(e)
-        data.leaves = this.get_leaves(data)
+        //data.leaves = this.get_leaves(data)
 
     }
 
@@ -593,13 +599,14 @@ export default class Model {
         this.data = root;
         this.data.root = true;
 
+        /*
         root.leaves = this.get_leaves(root)
 
 
         this.traverse(root, function(n,c){
             n.leaves = this.get_leaves(n)
         })
-
+        */
 
 
     }
@@ -733,6 +740,7 @@ export default class Model {
      - Root has leaves: A, B, C and D (terminal leaves)
      - Root has deep leaves: A, B, C, D and CD (terminal leaves + intermediate leaves)
      */
+    /*
     createDeepLeafList() {
 
          var build_deepLeafList = function(child, node){
@@ -757,6 +765,8 @@ export default class Model {
         this.traverse(this.data, build_deepLeafLeaves, build_deepLeafList)
 
     }
+    */
+
 
     reverse_order(parent,child) {
 
@@ -771,7 +781,7 @@ export default class Model {
 
 
     }
-
+    /*
     get_leaves(node){
 
 
@@ -786,14 +796,15 @@ export default class Model {
     })
         return l
     }
+     */
 
     remove_circularity(){ // safe my model
         var data = Object.assign({}, this.data);
 
         this.traverse(data, function(n,c){
             n.parent=null;
-            n.leaves=null;
-            n.correspondingLeaf = {}
+            //n.leaves=null;
+            //n.correspondingLeaf = {}
             n.elementBCN = null})
 
         return data
@@ -801,9 +812,9 @@ export default class Model {
 
     add_circularity_back(){
 
-        this.data.leaves = this.get_leaves(this.data)
+        //this.data.leaves = this.get_leaves(this.data)
 
-        this.traverse(this.data, function(n,c){n.leaves = this.get_leaves(n)}, this.set_parent)
+        //this.traverse(this.data, function(n,c){n.leaves = this.get_leaves(n)}, this.set_parent)
 
 
     }
