@@ -130,7 +130,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             let deep_leaf_list_1 = this.bound_container[0].models[this.bound_container[0].current_model].deep_leaf_list
             let deep_leaf_list_2 = this.bound_container[1].models[this.bound_container[1].current_model].deep_leaf_list
 
-            if (deep_leaf_list_2 > deep_leaf_list_1) {
+            if (deep_leaf_list_2.length > deep_leaf_list_1.length) {
                 let temp = deep_leaf_list_2
                 deep_leaf_list_2 = deep_leaf_list_1
                 deep_leaf_list_1 = temp
@@ -252,13 +252,15 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
 
         if(this.available_metrics.RDF && this.leaf_info.intersect) {
-            var RDF = compute_RF_distance(mod1, mod2, this.idSet)
-            this.distance.RF = RDF
+            this.distance.RF = compute_RF_distance(mod1, mod2, this.idSet)
         }
 
         if(this.available_metrics.WRF && this.leaf_info.intersect) {
-            var WRF = compute_WRF_distance(mod1, mod2,this.idSet)
-            this.distance.WRF = WRF
+            this.distance.WRF = compute_WRF_distance(mod1, mod2,this.idSet)
+        }
+
+        if(this.available_metrics.GRF && this.leaf_info.include && !this.leaf_info.intersect ) {
+            this.distance.GRF = compute_RF_distance(mod1, mod2, this.idSet)
         }
 
         //Idset is leaf array should be Hashmap
@@ -266,9 +268,14 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
         function compute_RF_distance(mod1,mod2, idSet) {
 
-
             var clTree1 = mod1.get_clusters_rf(idSet)
             var clTree2 = mod2.get_clusters_rf(idSet)
+
+            if(clTree2.size > clTree1.size) {
+                let temp = clTree2
+                clTree2 = clTree1
+                clTree1 = temp
+            }
 
             var shared_clusters = 0
             const total_clusters = clTree1.size + clTree2.size

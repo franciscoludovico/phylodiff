@@ -118,7 +118,7 @@ export default class Model {
         //adds id to each node in model
         this.traverse(this.data, function (node, children){
             node.id = node_count++
-            if(node.hasOwnProperty('name')) this.deep_leaf_list.push(node.name)
+            if(node.hasOwnProperty('name') && node.name != "") this.deep_leaf_list.push(node.name)
             node.get_next_node = function (){
                 var tree = this
                 if(!tree.hasOwnProperty('root') || tree.root === false) {
