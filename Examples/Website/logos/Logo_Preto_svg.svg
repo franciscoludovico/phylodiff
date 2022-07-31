@@ -1,0 +1,85 @@
+<svg id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595.28 185.51">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #000;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        stroke: #1d1d1b;
+      }
+
+      .cls-4 {
+        font-size: 21.16px;
+      }
+
+      .cls-4, .cls-7 {
+        font-family: BellMT, Bell MT;
+      }
+
+      .cls-5 {
+        letter-spacing: -0.02em;
+      }
+
+      .cls-6 {
+        letter-spacing: 0em;
+      }
+
+      .cls-7 {
+        font-size: 21.58px;
+        letter-spacing: 0.37em;
+      }
+
+      .cls-8 {
+        letter-spacing: 0.59em;
+      }
+    </style>
+  </defs>
+  <title>phylodiff_versões_Svg</title>
+  <g>
+    <polyline class="cls-1" points="225.8 119.45 227.82 135.01 220.1 135.03 218.66 142.85 228.28 143.37 230.72 170.71"/>
+    <path class="cls-1" d="M218.2,72.07h0c-8.63,1.26-18.84,7-19.58,27.05l-16.8,2.79"/>
+    <polyline class="cls-1" points="221.79 169.58 222.14 160.71 214.14 160.64 213.21 167.25"/>
+    <polyline class="cls-1" points="218.66 142.84 210.01 141.34 206.01 149.79 218.62 152.41 218.33 160.68"/>
+    <polyline class="cls-1" points="203.25 166.47 205.75 158.53 198.21 156.51 194.93 163.98"/>
+    <polyline class="cls-1" points="202.5 157.44 206.01 149.79 195.04 146.01 186.45 159.94"/>
+    <polyline class="cls-1" points="227.82 135 235.32 133.82 242.61 158.67 238.42 159.61 240.01 168.41"/>
+    <path class="cls-1" d="M150.74,74.08l31.89,10.31s-5.12,23.24,5.7,33.49l-28.91,19.23"/>
+    <path class="cls-1" d="M165.11,143.77l6.1-5.22s-9.38-10.83-9.33-12.92l-7.3,3.56"/>
+    <line class="cls-1" x1="183.18" y1="109.32" x2="151.26" y2="120.39"/>
+    <line class="cls-1" x1="181.52" y1="99.99" x2="172.56" y2="101.09"/>
+    <path class="cls-1" d="M164.1,95.61l8.39.07c-.6,2.55,1.19,10.49,1.19,10.49l-24.88,5.55"/>
+    <polyline class="cls-1" points="147.56 102.22 163.9 100.79 164.18 89.86 156.24 89.19"/>
+    <polyline class="cls-1" points="147.37 92.8 155.72 92.87 156.51 84.97 148.62 83.43"/>
+    <polyline class="cls-1" points="225.01 71.45 229.81 36.39 224.67 35.93 225.5 18.41"/>
+    <polyline class="cls-1" points="248.75 166.26 246.28 157.95 242.61 158.67"/>
+    <polyline class="cls-1" points="234.55 19.51 232.81 27.68 236.87 28.85 240.82 29.99 243.2 21.7"/>
+    <polyline class="cls-1" points="236.87 28.85 234.9 37.18 229.81 36.39"/>
+    <polyline class="cls-1" points="216.77 18.38 220.38 71.68 220.39 71.84"/>
+    <line class="cls-1" x1="215.22" y1="72.68" x2="205.78" y2="38.41"/>
+    <path class="cls-1" d="M207.34,18.38,210.83,37s-7,1.25-9.76,3l-3.25-8.21"/>
+    <path class="cls-1" d="M199.35,22.27l2,7.78s-6.43,2.81-7,3.28-3.69-7.08-3.69-7.08"/>
+    <polyline class="cls-1" points="207.73 76.37 187.13 48.22 191.27 44.68 182.84 30.35"/>
+    <polyline class="cls-1" points="175.6 36 180.71 41.97 177.23 44.95 183.28 51.4 187.13 48.22"/>
+    <polyline class="cls-1" points="168.71 42.43 174.12 47.61 177.23 44.95"/>
+    <polyline class="cls-1" points="202.26 83.11 172.77 64.17 175.65 59.66 162.78 49.23"/>
+    <polyline class="cls-1" points="153.58 65.17 161.25 68.85 162.85 64.79 170.32 68.74 172.77 64.17"/>
+    <polyline class="cls-1" points="157.69 56.76 164.6 60.92 162.85 64.79"/>
+    <path class="cls-2" d="M239.42,113.76a24,24,0,0,1-13.62,5.7l-.1-5.92a17.82,17.82,0,0,0-.53-35.4l-.1-6.68a24.05,24.05,0,0,1,14.35,42.3Z"/>
+    <path class="cls-1" d="M225.07,71.46a22.42,22.42,0,0,0-4.7.22c-.72.09-1.44.23-2.17.39"/>
+    <polyline class="cls-1" points="225.07 71.04 225.07 71.08 225.07 71.46"/>
+  </g>
+  <path class="cls-1" d="M230.11,170.51a77.42,77.42,0,0,0,62.74-44.87"/>
+  <path class="cls-1" d="M216.46,18.79c2.19-.19,4.71-.41,6.95-.41.43,0,.85,0,1.29,0a76.19,76.19,0,0,1,70.43,50.45"/>
+  <line class="cls-3" x1="224.7" y1="35.92" x2="224.7" y2="35.38"/>
+  <text class="cls-4" transform="translate(279.04 100.92)">PHY<tspan class="cls-5" x="44.09" y="0">L</tspan><tspan class="cls-6" x="56.57" y="0">O</tspan></text>
+  <text class="cls-7" transform="translate(355.35 101.81)">dif<tspan class="cls-8" x="46.33" y="0">f</tspan></text>
+</svg>
