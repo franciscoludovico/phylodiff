@@ -260,7 +260,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         }
 
         if(this.available_metrics.GRF && this.leaf_info.include && !this.leaf_info.intersect ) {
-            this.distance.GRF = compute_RF_distance(mod1, mod2, this.idSet)
+            this.distance.GRF = compute_GRF_distance(mod1, mod2, this.idSet)
         }
 
         //Idset is leaf array should be Hashmap
@@ -270,12 +270,6 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
             var clTree1 = mod1.get_clusters_rf(idSet)
             var clTree2 = mod2.get_clusters_rf(idSet)
-
-            if(clTree2.size > clTree1.size) {
-                let temp = clTree2
-                clTree2 = clTree1
-                clTree1 = temp
-            }
 
             var shared_clusters = 0
             const total_clusters = clTree1.size + clTree2.size
@@ -292,7 +286,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
             var rfDistance = -1
 
-            if(shared_clusters < total_clusters) {
+            if(shared_clusters < total_clusters/2 ) {
                 rfDistance = (total_clusters - shared_clusters*2) / 2
             }
 
@@ -314,7 +308,45 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
             return wrf_distance
         }
+
+        function compute_GRF_distance(mod1,mod2, idSet) {
+
+            var clTree1 = mod1.get_clusters_rf(idSet)
+            var clTree2 = mod2.get_clusters_rf(idSet)
+            var max_shared_clusters = clTree1.size
+
+            if(clTree1.size > clTree2.size) {
+                max_shared_clusters = clTree2.size
+                let temp = clTree2
+                clTree2 = clTree1
+                clTree1 = temp
+            }
+
+            var shared_clusters = 0
+            const total_clusters = clTree1.size + clTree2.size
+
+            var iterator = clTree2.values()
+            clTree1.forEach(function (value, key) {
+                for (const bitset of iterator) {
+                    if(bitset.equals(value)){
+                        shared_clusters++
+                        break
+                    }
+                }
+            })
+
+            var grfDistance = -1
+
+            if(shared_clusters <= max_shared_clusters ) {
+                grfDistance = (total_clusters - shared_clusters*2) / 2
+            }
+
+            return grfDistance
+        }
     }
+
+
+
 
     /*
     compute_distance(){
