@@ -49,7 +49,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             "compareMode" : false, // compare for each pair of tree topological similarity
         };
         this.undoing = false;
-        this.idSet = {}
+        this.id_set = {}
 
 
     }
@@ -136,14 +136,14 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 deep_leaf_list_1 = temp
             }
 
-            let idSet = new HashMap()
+            let id_set = new HashMap()
             let diff_counter = 0
 
 
-            deep_leaf_list_1.forEach( (value) => idSet.set(value,idSet.size) )
+            deep_leaf_list_1.forEach( (value) => id_set.set(value,id_set.size) )
             deep_leaf_list_2.forEach( (value) => {
-                    if(!idSet.has(value)) {
-                        idSet.set(value,idSet.size)
+                    if(!id_set.has(value)) {
+                        id_set.set(value,id_set.size)
                         diff_counter++
                     }
                 }
@@ -154,7 +154,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 }
                 this.leaf_info.include = true
             }
-            this.idSet = idSet
+            this.id_set = id_set
         }
 
         new keyboardManager(this);
@@ -250,32 +250,37 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         //mod1.createDeepLeafList()
 
 
-
+        /*
+        * We decide which metrics can be calculated based on their leaf information
+        * R&F and Weighed R&F can be calculated if the leaf sets of both trees intersect themselves
+        * Generalized R&F can be calculated if the leaf sets of both trees don't intersect themselves and one of those
+        * sets is included in the other
+        * */
         if(this.available_metrics.RDF && this.leaf_info.intersect) {
-            this.distance.RF = compute_RF_distance(mod1, mod2, this.idSet)
+            this.distance.RF = compute_RF_distance(mod1, mod2, this.id_set)
         }
 
         if(this.available_metrics.WRF && this.leaf_info.intersect) {
-            this.distance.WRF = compute_WRF_distance(mod1, mod2,this.idSet)
+            this.distance.WRF = compute_WRF_distance(mod1, mod2,this.id_set)
         }
 
         if(this.available_metrics.GRF && this.leaf_info.include && !this.leaf_info.intersect ) {
-            this.distance.GRF = compute_GRF_distance(mod1, mod2, this.idSet)
+            this.distance.GRF = compute_GRF_distance(mod1, mod2, this.id_set)
         }
 
-        //Idset is leaf array should be Hashmap
-        //Change prototype function for leaves
+        function compute_RF_distance(mod1,mod2, id_set) {
 
-        function compute_RF_distance(mod1,mod2, idSet) {
-
-            var clTree1 = mod1.get_clusters_rf(idSet)
-            var clTree2 = mod2.get_clusters_rf(idSet)
+            var cl_tree1 = mod1.get_clusters_rf(id_set)
+            var cl_tree2 = mod2.get_clusters_rf(id_set)
 
             var shared_clusters = 0
-            const total_clusters = clTree1.size + clTree2.size
+            const total_clusters = cl_tree1.size + cl_tree2.size
 
-            var iterator = clTree2.values()
-            clTree1.forEach(function (value, key) {
+            /*
+            * Comparing both cluster maps to check how similar they are
+            * */
+            var iterator = cl_tree2.values()
+            cl_tree1.forEach(function (value, key) {
                 for (const bitset of iterator) {
                     if(bitset.equals(value)){
                         shared_clusters++
@@ -284,49 +289,52 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 }
             })
 
-            var rfDistance = -1
+            var rf_distance = -1
 
-            if(shared_clusters < total_clusters/2 ) {
-                rfDistance = (total_clusters - shared_clusters*2) / 2
+            /*
+            * The number of shared clusters should not be bigger than the number of clusters of both trees
+            * */
+            if(shared_clusters * 2 < total_clusters ) {
+                rf_distance = (total_clusters - shared_clusters * 2) / 2
             }
 
-            return rfDistance
+            return rf_distance
         }
 
-        function compute_WRF_distance(mod1,mod2, idSet) {
+        function compute_WRF_distance(mod1,mod2, id_set) {
 
-            let distanceMap = new HashMap()
+            let distance_map = new HashMap()
 
-            var clTree1 = mod1.get_clusters_wrf(idSet,distanceMap)
-            var clTree2 = mod2.get_clusters_wrf(idSet,distanceMap)
+            var cl_tree1 = mod1.get_clusters_wrf(id_set,distance_map)
+            var cl_tree2 = mod2.get_clusters_wrf(id_set,distance_map)
 
             var wrf_distance = 0
 
-            distanceMap.forEach(function (value, key) {
+            distance_map.forEach(function (value, key) {
                 wrf_distance += Math.abs(value)
             })
 
             return wrf_distance
         }
 
-        function compute_GRF_distance(mod1,mod2, idSet) {
+        function compute_GRF_distance(mod1,mod2, id_set) {
 
-            var clTree1 = mod1.get_clusters_rf(idSet)
-            var clTree2 = mod2.get_clusters_rf(idSet)
-            var max_shared_clusters = clTree1.size
+            var cl_tree1 = mod1.get_clusters_rf(id_set)
+            var cl_tree2 = mod2.get_clusters_rf(id_set)
+            var max_shared_clusters = cl_tree1.size
 
-            if(clTree1.size > clTree2.size) {
-                max_shared_clusters = clTree2.size
-                let temp = clTree2
-                clTree2 = clTree1
-                clTree1 = temp
+            if(cl_tree1.size > cl_tree2.size) {
+                max_shared_clusters = cl_tree2.size
+                let temp = cl_tree2
+                cl_tree2 = cl_tree1
+                cl_tree1 = temp
             }
 
             var shared_clusters = 0
-            const total_clusters = clTree1.size + clTree2.size
+            const total_clusters = cl_tree1.size + cl_tree2.size
 
-            var iterator = clTree2.values()
-            clTree1.forEach(function (value, key) {
+            var iterator = cl_tree2.values()
+            cl_tree1.forEach(function (value, key) {
                 for (const bitset of iterator) {
                     if(bitset.equals(value)){
                         shared_clusters++
@@ -335,13 +343,13 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 }
             })
 
-            var grfDistance = -1
+            var grf_distance = -1
 
             if(shared_clusters <= max_shared_clusters ) {
-                grfDistance = (total_clusters - shared_clusters*2) / 2
+                grf_distance = (total_clusters - shared_clusters*2) / 2
             }
 
-            return grfDistance
+            return grf_distance
         }
     }
 

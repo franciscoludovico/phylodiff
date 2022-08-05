@@ -115,7 +115,11 @@ export default class Model {
 
         }
 
-        //adds id to each node in model
+        /*
+        * Adds an id to each of the nodes of a tree
+        * Adds to each node a function to get the next node (prefix way)
+        * Creates a list with the info about each leaf (terminal and external) of a tree
+        * */
         this.traverse(this.data, function (node, children){
             node.id = node_count++
             if(node.hasOwnProperty('name') && node.name != "") this.deep_leaf_list.push(node.name)
@@ -132,7 +136,6 @@ export default class Model {
                     tree = tree.children[0]
                 }
                 return tree
-
             }
         })
 
@@ -158,14 +161,8 @@ export default class Model {
                     if (e > this.largestEvents ) {this.largestEvents = e;}
 
                 }
-
-
-
             })
-
-
         }
-
     }
 
     get_name(){
@@ -193,78 +190,80 @@ export default class Model {
                 if (func_post) {
                     func_post.apply(this,[child,o])
                 }
-
-
             }
-
-
         }
-
         return o
-
     }
 
-    get_clusters_rf(idSet) {
-        var clusterMap = new HashMap()
+    /*
+    * Traverses the tree in a prefix way to get the tree clusters
+    * Also has in account the internal nodes of the trees
+    * */
+    get_clusters_rf(id_set) {
+        var cluster_map = new HashMap()
         var node = this.data
         do {
             node = node.get_next_node()
             var bs = new BitSet("0")
             if(node.hasOwnProperty('name') && node.name != "") {
-                var id = idSet.get(node.name)
+                var id = id_set.get(node.name)
                 bs.set(id,1)
             }
             if(node.hasOwnProperty('children')){
                 if(node.children.length > 0){
-                    var bsLeft = clusterMap.get(node.children[0].id)
-                    bs = bs.or(bsLeft)
+                    var bs_left = cluster_map.get(node.children[0].id)
+                    bs = bs.or(bs_left)
 
                     if(node.children.length > 1) {
-                        var bsRight = clusterMap.get(node.children[1].id)
-                        bs = bs.or(bsRight)
+                        var bs_right = cluster_map.get(node.children[1].id)
+                        bs = bs.or(bs_right)
                     }
                 }
             }
-            clusterMap.set(node.id, bs)
+            cluster_map.set(node.id, bs)
         } while (!node.hasOwnProperty('root'))
-        return clusterMap
+        return cluster_map
     }
 
-    get_clusters_wrf(idSet, distanceMap) {
-        var clusterMap = new HashMap()
+    /*
+    * Also traverses the tree in a prefix way
+    * Based on the same logic as get_clusters_rf but associates the length of the cluster's branch to a map
+    * */
+    get_clusters_wrf(id_set, distance_map) {
+        var cluster_map = new HashMap()
         var node = this.data
         do {
             node = node.get_next_node()
             var bs = new BitSet("0")
             if(node.hasOwnProperty('name') && node.name != "") {
-                var id = idSet.get(node.name)
+                var id = id_set.get(node.name)
                 bs.set(id,1)
             }
             if(node.hasOwnProperty('children')){
                 if(node.children.length > 0){
-                    var bsLeft = clusterMap.get(node.children[0].id)
-                    bs = bs.or(bsLeft)
+                    var bs_left = cluster_map.get(node.children[0].id)
+                    bs = bs.or(bs_left)
 
                     if(node.children.length > 1) {
-                        var bsRight = clusterMap.get(node.children[1].id)
-                        bs = bs.or(bsRight)
+                        var bs_right = cluster_map.get(node.children[1].id)
+                        bs = bs.or(bs_right)
                     }
                 }
             }
-            clusterMap.set(node.id, bs)
+            cluster_map.set(node.id, bs)
 
             if(!node.hasOwnProperty('root')) {
-                console.log(distanceMap.has(bs.toString()))
-                if(!distanceMap.has(bs.toString())) {
-                    distanceMap.set(bs.toString(), node.branch_length)
+                console.log(distance_map.has(bs.toString()))
+                if(!distance_map.has(bs.toString())) {
+                    distance_map.set(bs.toString(), node.branch_length)
                 }
                 else {
-                   var currDist = distanceMap.get(bs.toString())
-                   distanceMap.set(bs.toString(), currDist - node.branch_length)
+                   var curr_dist = distance_map.get(bs.toString())
+                   distance_map.set(bs.toString(), curr_dist - node.branch_length)
                 }
             }
         } while (!node.hasOwnProperty('root'))
-        return clusterMap
+        return cluster_map
     }
 
     traverse_hierarchy(o,func_pre, func_post) {
