@@ -219,6 +219,12 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     }
 
+
+    async lookup_custom_metrics(filename) {
+        const {metrics} = await import("./metric_modules/" + filename + ".js")
+        metrics.forEach(metric => metric.compute())
+    }
+
     compute_metrics(){
         if (this.bound_container[0].models.length == 0 || this.bound_container[1].length == 0) {
             return

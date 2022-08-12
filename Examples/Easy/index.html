@@ -72,19 +72,22 @@
     phylo.available_metrics.WRF = true
     phylo.available_metrics.GRF = true
     phylo.bound_container = [c1,c2];
-    phylo.start()
-    phylo.compute_metrics()
-    document.getElementById("rf_distance").onclick = function() {
-        document.getElementById("rf_display").value = phylo.distance.RF
-    }
+    phylo.lookup_custom_metrics("lookup-test")
+        .then(()=> {
+            phylo.start()
+            phylo.compute_metrics()
+            document.getElementById("rf_distance").onclick = function () {
+                document.getElementById("rf_display").value = phylo.distance.RF
+            }
 
-    document.getElementById("wrf_distance").onclick = function() {
-        document.getElementById("wrf_display").value = phylo.distance.WRF
-    }
+            document.getElementById("wrf_distance").onclick = function () {
+                document.getElementById("wrf_display").value = phylo.distance.WRF
+            }
 
-    document.getElementById("grf_distance").onclick = function() {
-        document.getElementById("grf_display").value = phylo.distance.GRF
-    }
+            document.getElementById("grf_distance").onclick = function () {
+                document.getElementById("grf_display").value = phylo.distance.GRF
+            }
+        })
 
 
 </script>
