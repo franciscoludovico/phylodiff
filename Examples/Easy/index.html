@@ -68,16 +68,13 @@
 
     phylo.settings.compareMode = true;
     phylo.settings.compute_metrics = true;
-    phylo.available_metrics.RDF = true
-    phylo.available_metrics.WRF = true
-    phylo.available_metrics.GRF = true
     phylo.bound_container = [c1,c2];
     phylo.lookup_custom_metrics("lookup-test")
         .then(()=> {
             phylo.start()
             phylo.compute_metrics()
             document.getElementById("rf_distance").onclick = function () {
-                document.getElementById("rf_display").value = phylo.distance.RF
+                document.getElementById("rf_display").value = phylo.distance.RDF
             }
 
             document.getElementById("wrf_distance").onclick = function () {
