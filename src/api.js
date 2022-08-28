@@ -12,6 +12,10 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     constructor() {
         this.containers = {}; // {container id -> Container() }
+        this.last_models = {
+            'container0' : -1,
+            'container1' : -1
+        }
         this.bound_container = []
         this.session_token = null
         this.session_url = null
@@ -75,7 +79,6 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             "Cl_good" : false,
             "Cl_left" : false,
             "Cl_right" : false,
-
              */
         };
         let default_settings = {
@@ -124,35 +127,6 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             /*if (this.settings.compute_distance){
                 this.compute_distance()
             }*/
-
-            let deep_leaf_list_1 = this.bound_container[0].models[this.bound_container[0].current_model].deep_leaf_list
-            let deep_leaf_list_2 = this.bound_container[1].models[this.bound_container[1].current_model].deep_leaf_list
-
-            if (deep_leaf_list_2.length > deep_leaf_list_1.length) {
-                let temp = deep_leaf_list_2
-                deep_leaf_list_2 = deep_leaf_list_1
-                deep_leaf_list_1 = temp
-            }
-
-            let id_set = new HashMap()
-            let diff_counter = 0
-
-
-            deep_leaf_list_1.forEach( (value) => id_set.set(value,id_set.size) )
-            deep_leaf_list_2.forEach( (value) => {
-                    if(!id_set.has(value)) {
-                        id_set.set(value,id_set.size)
-                        diff_counter++
-                    }
-                }
-            )
-            if(diff_counter == 0) {
-                if (deep_leaf_list_1.length == deep_leaf_list_2.length) {
-                    this.leaf_info.intersect = true
-                }
-                this.leaf_info.include = true
-            }
-            this.id_set = id_set
         }
 
         new keyboardManager(this);
@@ -230,6 +204,39 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
         var mod1 = this.bound_container[0].models[this.bound_container[0].current_model]
         var mod2 = this.bound_container[1].models[this.bound_container[1].current_model]
+
+        if(mod1.uid !== this.last_models.container0 || mod2.uid !== this.last_models.container1){
+            let deep_leaf_list_1 = this.bound_container[0].models[this.bound_container[0].current_model].deep_leaf_list
+            let deep_leaf_list_2 = this.bound_container[1].models[this.bound_container[1].current_model].deep_leaf_list
+
+            if (deep_leaf_list_2.length > deep_leaf_list_1.length) {
+                let temp = deep_leaf_list_2
+                deep_leaf_list_2 = deep_leaf_list_1
+                deep_leaf_list_1 = temp
+            }
+
+            let id_set = new HashMap()
+            let diff_counter = 0
+
+
+            deep_leaf_list_1.forEach( (value) => id_set.set(value,id_set.size) )
+            deep_leaf_list_2.forEach( (value) => {
+                    if(!id_set.has(value)) {
+                        id_set.set(value,id_set.size)
+                        diff_counter++
+                    }
+                }
+            )
+            if(diff_counter == 0) {
+                if (deep_leaf_list_1.length == deep_leaf_list_2.length) {
+                    this.leaf_info.intersect = true
+                }
+                this.leaf_info.include = true
+            }
+            this.id_set = id_set
+            this.last_models.container0 = mod1.uid
+            this.last_models.container1 = mod2.uid
+        }
 
         const available_metrics = this.metrics.filter(metric => {
                 const filtered_conditions = metric.conditions.filter(condition => {
