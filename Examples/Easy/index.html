@@ -8,22 +8,11 @@
     <title>PhyloDiff</title>
 
     <script src="../../dist/phylo.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-
-    <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./phyloio.css">
-
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-    <script src="./phylo.js"></script>
 
 </head>
 <style>
     button {
-        background-color: #3cb341; /* Green */
+        background-color: #4CAF50; /* Green */
         border: none;
         color: white;
         padding: 15px 32px;
@@ -42,15 +31,13 @@
 
 <body >
 
-
-
 <div id="container1" style=" display: inline-block;width: 45%;margin:16px;height: 720px;background-color: #fff;">
 </div>
 
 <div id="container2" style=" display: inline-block;width: 45%;margin:16px;height: 720px;background-color: #fff;">
 </div>
 
-<div id="compute_distance" >
+<div id="compute_distance">
     <button class="button" id="rf_distance">RF Distance</button>
     <input class="input" type ="text" id ="rf_display" disabled >
 
@@ -60,80 +47,7 @@
     <button class="button" id="grf_distance">GRF Distance</button>
     <input class="input" type ="text" id ="grf_display" disabled >
 
-    <button class="button" id="compute">
-        <i class="bi-rulers" style="font-size: 16px;color: white  "></i>
-        Compute
-    </button>
-
-    <button class="button" id ="menu_load">
-        <i class="bi-file-earmark-arrow-up" style="font-size: 16px;color: white "></i>
-        Load Session File
-    </button>
-    <button class="button" id ="menu_save">
-        <i class="bi-file-earmark-arrow-down" style="font-size: 16px;color: white "></i>
-        Save Session File
-    </button>
-    <button class="button" id ="menu_screenshot">
-        <i class="bi-camera" style="font-size: 16px;color: white  "></i>
-        Screenshot
-    </button>
-    <button class="button" id="about">
-        <i class="bi-question-circle" style="font-size: 16px; color:white  "></i>
-        About
-    </button>
-</div>
-
-<div class="modal" id="modal_help" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Phylo.io help center</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Made by Pedro Gardete and Francisco Ludovico
-                Projecto e Seminário | Grupo 20
-                Engenharia Informática e de Computadores
-            </div>
-            <div class="modal-footer">
-                <button type="button"  class="btn btn-primary" data-bs-dismiss="modal">I'm done!</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modal_screenshot" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Screenshot settings </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p> Here, you will make a screenshot of the current view.</p>
-
-                <label for="s_format_r" style="margin-left: 24px"><strong>Format:</strong> </label>
-
-
-                <div class="btn-group" style="margin-left: 12px"  role="group" id="s_format_r" aria-label="Basic radio toggle button group">
-
-                    <input type="radio" class="btn-check" name="format_screen" id="btnradiosvg" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradiosvg">SVG</label>
-
-                    <input type="radio" class="btn-check" name="format_screen" id="btnradiopng" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradiopng">PNG</label>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button"  id="button_export_screenshot" class="btn btn-primary" data-bs-dismiss="modal">Export as Image</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="position-fixed top-50 start-50 translate-middle"  id="error_remote_data" style="display: none; z-index: 10000000">
-
+    <button class="button" id="compute">Compute</button>
 </div>
 
 
@@ -173,71 +87,7 @@
             }
 
             document.getElementById("compute").onclick = function () {phylo.compute_metrics()}
-
-            // MODALS
-            document.getElementById("menu_load").onclick = function() {
-                $('#modal_phylo_session').modal('show');
-            };
-
-            document.getElementById("menu_screenshot").onclick = function() {
-                $('#modal_screenshot').modal('show');
-            };
-
-            document.getElementById("menu_help").onclick = function() {
-                $('#modal_help').modal('show');
-            };
-
-            document.getElementById("menu_save").onclick = function() {
-                phylo.save_session()
-                refresh()
-
-            };
         })
-
-
-    document.getElementById('load_session_file').onclick = () => {
-
-        var file = document.getElementById('load_session_input').files[0];
-
-        $('#modal_phylo_session').modal('hide');
-
-        if (file) {
-            var reader = new FileReader();
-            reader.readAsText(file, "UTF-8");
-            reader.onload =  (evt) => {
-
-                var pickle = JSON.parse(evt.target.result)
-
-                start_with_json(pickle)
-
-
-
-            }
-            reader.onerror = function (evt) {
-                console.log("error reading file")
-            }
-        }
-    }
-
-    document.getElementById("button_export_screenshot").onclick = function() {
-        if (phylo.settings.compareMode) {
-
-            var svg1 = phylo.bound_container[0].viewer.d3.select("#svg" + phylo.bound_container[0].viewer.uid)
-            var svg2 = phylo.bound_container[1].viewer.d3.select("#svg" + phylo.bound_container[1].viewer.uid)
-        }
-
-        else {
-            var svg1 = Object.values(phylo.containers)[0].viewer.d3.select("#svg" + Object.values(phylo.containers)[0].viewer.uid)
-        }
-
-        if (document.getElementById("btnradiosvg").checked){
-            phylo.screen_shot({ svg1: svg1,svg2: svg2,format: 'svg'})
-        }
-
-        else if (document.getElementById("btnradiopng").checked){
-            phylo.screen_shot({ svg1: svg1,svg2: svg2,format: 'png'})
-        }
-    };
 
 
 </script>

@@ -73,7 +73,8 @@
 
     </div>
 
-    <div class="d-flex flex-column flex-shrink-0 " style="width: 4.5rem;background-color: rgb(33, 37, 41);}">
+    <div class="d-flex flex-column flex-shrink-0 " style="width: 4.5rem;background-color: rgb(33, 37, 41);
+}">
 
 
 
@@ -89,7 +90,6 @@
                     <i class="bi-file-earmark-arrow-up" style="font-size: 24px;color: white "></i>
                 </a>
             </li>
-
             <li>
                 <a href="#" class="nav-link py-3 border-bottom" id="menu_save" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Save Session">
                     <i class="bi-file-earmark-arrow-down" style="font-size: 24px;color: white  "></i>
@@ -571,6 +571,8 @@
     }
 
     document.getElementById("button_export_screenshot").onclick = function() {
+
+
         if (phylo.settings.compareMode) {
 
             var svg1 = phylo.bound_container[0].viewer.d3.select("#svg" + phylo.bound_container[0].viewer.uid)
@@ -588,6 +590,11 @@
         else if (document.getElementById("btnradiopng").checked){
             phylo.screen_shot({ svg1: svg1,svg2: svg2,format: 'png'})
         }
+
+
+
+
+
     };
 
 
