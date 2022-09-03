@@ -1506,7 +1506,7 @@ export default class Interface {
 
         var color_label = Array.from(this.viewer.model.settings.colorlabels)
 
-        var options = ["Topology","RF"]
+        var options = ["Topology"]
         options = options.concat(color_label)
 
         selectcoloring.selectAll('option').data(options).enter().append('option').attr('value', function (d) { return d; }).text(function (d) { return d; });

@@ -16,7 +16,7 @@ metrics.push(
         description: "RDF Metric",
         conditions: ["intersect"],
         selected: false,
-        highlight_settings: {label:"RDF",color_extent_min: 1,color_extent_max: 50},
+        highlight_settings: {label:"RDF",color_extent_min: 0,color_extent_max: 1},
         ref: "link"
     }
 )
@@ -27,7 +27,7 @@ metrics.push(
         compute: compute_WRF_distance,
         description: "WRF Metric",
         conditions: ["intersect"],
-        selected: true,
+        selected: false,
         highlight_settings: {label:"Length",color_extent_min: null,color_extent_max: null},
         ref: "link"
     }
@@ -39,7 +39,8 @@ metrics.push(
         compute: compute_GRF_distance,
         description: "GRF Metric",
         conditions: ["include"],
-        selected: false,
+        selected: true,
+        highlight_settings: {label:"GRF",color_extent_min: 0,color_extent_max: 1},
         ref: "link"
     }
 )
@@ -61,9 +62,9 @@ if(this.available_metrics.GRF && this.leaf_info.include && !this.leaf_info.inter
  */
 
 function compute_RF_distance(mod1, mod2, id_set) {
-
-    var cl_tree1 = mod1.get_clusters_rf(id_set)
-    var cl_tree2 = mod2.get_clusters_rf(id_set)
+    const label = 'RDF'
+    var cl_tree1 = mod1.get_clusters_rf(id_set,label)
+    var cl_tree2 = mod2.get_clusters_rf(id_set,label)
 
     var shared_clusters = 0
     const total_clusters = cl_tree1.size + cl_tree2.size
@@ -72,10 +73,12 @@ function compute_RF_distance(mod1, mod2, id_set) {
     * Comparing both cluster maps to check how similar they are
     * */
     var iterator = cl_tree2.values()
-    cl_tree1.forEach(function (value, key) {
-        for (const bitset of iterator) {
-            if (bitset.equals(value)) {
+    cl_tree1.forEach(function (cluster1, key) {
+        for (const cluster2 of iterator) {
+            if (cluster2.bs.equals(cluster1.bs)) {
                 shared_clusters++
+                cluster1.node.extended_informations[label] = 1
+                cluster2.node.extended_informations[label] = 1
                 break
             }
         }
@@ -111,8 +114,9 @@ function compute_WRF_distance(mod1, mod2, id_set) {
 
 function compute_GRF_distance(mod1, mod2, id_set) {
 
-    var cl_tree1 = mod1.get_clusters_rf(id_set)
-    var cl_tree2 = mod2.get_clusters_rf(id_set)
+    const label = 'GRF'
+    var cl_tree1 = mod1.get_clusters_rf(id_set,label)
+    var cl_tree2 = mod2.get_clusters_rf(id_set,label)
     var max_shared_clusters = cl_tree1.size
 
     if (cl_tree1.size > cl_tree2.size) {
@@ -126,10 +130,12 @@ function compute_GRF_distance(mod1, mod2, id_set) {
     const total_clusters = cl_tree1.size + cl_tree2.size
 
     var iterator = cl_tree2.values()
-    cl_tree1.forEach(function (value, key) {
-        for (const bitset of iterator) {
-            if (bitset.equals(value)) {
+    cl_tree1.forEach(function (cluster1, key) {
+        for (const cluster2 of iterator) {
+            if (cluster2.bs.equals(cluster1.bs)) {
                 shared_clusters++
+                cluster1.node.extended_informations[label] = 1
+                cluster2.node.extended_informations[label] = 1
                 break
             }
         }

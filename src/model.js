@@ -199,7 +199,7 @@ export default class Model {
     * Traverses the tree in a prefix way to get the tree clusters
     * Also has in account the internal nodes of the trees
     * */
-    get_clusters_rf(id_set) {
+    get_clusters_rf(id_set, label) {
         var cluster_map = new HashMap()
         var node = this.data
         do {
@@ -211,20 +211,17 @@ export default class Model {
             }
             if(node.hasOwnProperty('children')){
                 if(node.children.length > 0){
-                    var bs_left = cluster_map.get(node.children[0].id)
+                    var bs_left = cluster_map.get(node.children[0].id).bs
                     bs = bs.or(bs_left)
 
                     if(node.children.length > 1) {
-                        var bs_right = cluster_map.get(node.children[1].id)
+                        var bs_right = cluster_map.get(node.children[1].id).bs
                         bs = bs.or(bs_right)
                     }
                 }
             }
-            if(!node.hasOwnProperty('root')){
-                var x = Math.random() * (50 - 1) + 1
-                node.extended_informations['RDF'] = Math.floor(x)
-            }
-            cluster_map.set(node.id, bs)
+            node.extended_informations[label] = 0
+            cluster_map.set(node.id, {bs:bs,node:node})
         } while (!node.hasOwnProperty('root'))
         return cluster_map
     }
@@ -262,8 +259,8 @@ export default class Model {
                     distance_map.set(bs.toString(), node.branch_length)
                 }
                 else {
-                   var curr_dist = distance_map.get(bs.toString())
-                   distance_map.set(bs.toString(), curr_dist - node.branch_length)
+                    const curr_dist = distance_map.get(bs.toString());
+                    distance_map.set(bs.toString(), curr_dist - node.branch_length)
                 }
             }
         } while (!node.hasOwnProperty('root'))
