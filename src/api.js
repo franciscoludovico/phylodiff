@@ -252,8 +252,27 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         available_metrics.forEach(metric => {
             const result = metric.compute(mod1,mod2,this.id_set)
             this.distance[metric.name] = result
+            if(metric.hasOwnProperty('highlight_settings') && metric.selected){
+                new_highlight_label(mod1,metric.highlight_settings)
+                new_highlight_label(mod2,metric.highlight_settings)
+                mod1.settings.style.color_accessor = metric.highlight_settings.label
+                mod2.settings.style.color_accessor = metric.highlight_settings.label
+                this.bound_container[0].viewer.set_color_scale();
+                this.bound_container[0].viewer.render(this.bound_container[0].viewer.hierarchy)
+                this.bound_container[1].viewer.set_color_scale();
+                this.bound_container[1].viewer.render(this.bound_container[1].viewer.hierarchy)
+            }
         } )
 
+        function new_highlight_label(mod,highlight_settings) {
+            var label = highlight_settings.label
+            if(!mod.settings.labels.has(label)) {
+                mod.settings.labels.add(label)
+                mod.settings.colorlabels.add(label)
+                mod.settings.style.color_extent_max[label] = highlight_settings.color_extent_max;
+                mod.settings.style.color_extent_min[label] = highlight_settings.color_extent_min;
+            }
+        }
         /*
         this.metrics.forEach(metric => {
             if(!metric.conditions.filter(condition =>{

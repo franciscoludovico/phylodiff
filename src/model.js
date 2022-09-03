@@ -220,6 +220,10 @@ export default class Model {
                     }
                 }
             }
+            if(!node.hasOwnProperty('root')){
+                var x = Math.random() * (50 - 1) + 1
+                node.extended_informations['RDF'] = Math.floor(x)
+            }
             cluster_map.set(node.id, bs)
         } while (!node.hasOwnProperty('root'))
         return cluster_map

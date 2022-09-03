@@ -16,6 +16,7 @@ metrics.push(
         description: "RDF Metric",
         conditions: ["intersect"],
         selected: false,
+        highlight_settings: {label:"RDF",color_extent_min: 1,color_extent_max: 50},
         ref: "link"
     }
 )
@@ -26,7 +27,8 @@ metrics.push(
         compute: compute_WRF_distance,
         description: "WRF Metric",
         conditions: ["intersect"],
-        selected: false,
+        selected: true,
+        highlight_settings: {label:"Length",color_extent_min: null,color_extent_max: null},
         ref: "link"
     }
 )
