@@ -7,6 +7,14 @@
 
     <title>PhyloDiff</title>
 
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+
     <script src="../../dist/phylo.js"></script>
 
 </head>
@@ -27,6 +35,16 @@
         margin: 8px 0;
         box-sizing: border-box;
     }
+    #distance_window {
+        border-radius: 8px;
+        position: absolute;
+        top: 30%;
+        left:50%;
+        z-index: 9;
+        background-color: rgba(235,235,235,0.95);
+        text-align: center;
+
+    }
 </style>
 
 <body >
@@ -37,24 +55,86 @@
 <div id="container2" style=" display: inline-block;width: 45%;margin:16px;height: 720px;background-color: #fff;">
 </div>
 
+<div id="distance_window">
+
+
+
+    <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
+    <div id="mydivheader"> <p style="margin-bottom: 0px"><strong> Distance <button class="btn" id="close_distance_window" >
+        <i id='icon_distance' class="bi-x-lg" ></i>
+    </button></strong> </p>
+
+    </div>
+    <div id="mydivbody"  >
+
+    </div>
+
+
+</div>
+
+
+
 <div id="compute_distance">
-    <button class="button" id="rf_distance">RF Distance</button>
-    <input class="input" type ="text" id ="rf_display" disabled >
-
-    <button class="button" id="wrf_distance">WRF Distance</button>
-    <input class="input" type ="text" id ="wrf_display" disabled >
-
-    <button class="button" id="grf_distance">GRF Distance</button>
-    <input class="input" type ="text" id ="grf_display" disabled >
-
     <button class="button" id="compute">Compute</button>
 </div>
 
 
 <script>
 
+    dragElement(document.getElementById("distance_window"));
+
+    document.getElementById("close_distance_window").addEventListener('click', event => {
+
+        document.getElementById("distance_window").style.display = 'none'
+        phylo.settings.compute_metrics = false;
 
 
+
+    });
+
+    function dragElement(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id)) {
+            // if present, the header is where you move the DIV from:
+            document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+        } else {
+            // otherwise, move the DIV from anywhere inside the DIV:
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            // stop moving when mouse button is released:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+</script>
+
+<script>
     const t1 = "(dog:20, (elephant:30, horse:60):20)"
     //const t1 = "((yli:1.0085614391793067,(((lel:0.2880678599618948,(cal:0.11643570498932501,ctr:0.12746420698315983):0.0877413194006926):0.12449843844102518,pst:0.20187483296288805):0.04951181210826987,(pgu:0.3208350693977453,dha:0.19121342958249643):0.0444880656387921):0.3761988962574594):0.22545281705785974,(((kla:0.32829009627835226,ago:0.35217085340006204):0.057415467336693615,(skl:0.15813405639248146,kwa:0.25658337062111586):0.04348414441988464):0.036897766465122404,(cgl:0.29957965624763355,(sca:0.24212307199678842,(sba:0.03984952076326609,(((sce:0.022286259220280224,spa:0.016875934069075366):0.01282179619059339,smi:0.03661027033511007):0.013312280806766753,sku:0.042685124078088485):0.014142671709463695):0.17548658899657893):0.03625000527459598):0.08921537612721808):0.22545281705785974):0;"
     const t2 = "((dog:20,cat:10):20, (elephant:30, horse:60):20)"
@@ -69,24 +149,14 @@
     c2.add_tree(t2, {'use_branch_lenght': true})
 
     phylo.settings.compareMode = true;
-    phylo.settings.compute_metrics = true;
     phylo.bound_container = [c1,c2];
     phylo.lookup_custom_metrics("lookup-test")
         .then(()=> {
             phylo.start()
-            document.getElementById("rf_distance").onclick = function () {
-                document.getElementById("rf_display").value = phylo.distance.RDF
+            document.getElementById("compute").onclick = function () {
+                phylo.settings.compute_metrics = true;
+                phylo.compute_metrics()
             }
-
-            document.getElementById("wrf_distance").onclick = function () {
-                document.getElementById("wrf_display").value = phylo.distance.WRF
-            }
-
-            document.getElementById("grf_distance").onclick = function () {
-                document.getElementById("grf_display").value = phylo.distance.GRF
-            }
-
-            document.getElementById("compute").onclick = function () {phylo.compute_metrics()}
         })
 
 

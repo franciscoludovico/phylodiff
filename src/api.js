@@ -3,6 +3,7 @@ import Container from './container.js'
 const { build_table, reroot_hierarchy, screen_shot } = require('./utils.js')
 import keyboardManager from './keyboardManager.js'
 import FileSaver from 'file-saver' ;
+import Interface from "./interface";
 var BitSet = require('bitset')
 var HashMap = require('hashmap')
 var default_metrics = require('./metric_modules/default_metrics')
@@ -69,17 +70,6 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.session_url = null
         this.phylo_embedded = false
         this.distance = {
-            /*
-            'RF' : false,
-            "Euc": false,
-            "clade": false,
-            "RF_good" : false,
-            "RF_left" : false,
-            "RF_right" : false,
-            "Cl_good" : false,
-            "Cl_left" : false,
-            "Cl_right" : false,
-             */
         };
         let default_settings = {
             'no_distance_message': true,
@@ -250,19 +240,28 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         )
 
         available_metrics.forEach(metric => {
-            const result = metric.compute(mod1,mod2,this.id_set)
-            this.distance[metric.name] = result
-            if(metric.hasOwnProperty('highlight_settings') && metric.selected){
+            this.distance[metric.full_name] = metric.compute(mod1,mod2,this.id_set)
+            if(metric.hasOwnProperty('highlight_settings')){
                 new_highlight_label(mod1,metric.highlight_settings)
                 new_highlight_label(mod2,metric.highlight_settings)
+                /*
                 mod1.settings.style.color_accessor = metric.highlight_settings.label
                 mod2.settings.style.color_accessor = metric.highlight_settings.label
-                this.bound_container[0].viewer.set_color_scale();
-                this.bound_container[0].viewer.render(this.bound_container[0].viewer.hierarchy)
-                this.bound_container[1].viewer.set_color_scale();
-                this.bound_container[1].viewer.render(this.bound_container[1].viewer.hierarchy)
+                 */
             }
         } )
+
+        /*
+        this.bound_container[0].viewer.set_color_scale();
+        this.bound_container[0].viewer.render(this.bound_container[0].viewer.hierarchy)
+        this.bound_container[1].viewer.set_color_scale();
+        this.bound_container[1].viewer.render(this.bound_container[1].viewer.hierarchy)
+        */
+
+        this.bound_container[0].interface = new Interface(this.bound_container[0].viewer,this.bound_container[0])
+        this.bound_container[1].interface = new Interface(this.bound_container[1].viewer,this.bound_container[1])
+
+        this.display_distance_window()
 
         function new_highlight_label(mod,highlight_settings) {
             var label = highlight_settings.label
@@ -530,51 +529,20 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     }
 
+     */
+
     display_distance_window(){
 
-        var bool_distance_computed = (this.distance.RF !== false || this.distance.Euc !== false  || this.distance.clade !== false || this.settings.no_distance_message !== true   )
-        document.getElementById("distance_window").style.display  = (this.settings.compareMode && bool_distance_computed ) ?  'block': 'none';
+        document.getElementById("distance_window").style.display  = (this.settings.compareMode ) ?  'block': 'none';
 
         var divdiv = document.getElementById("mydivbody");
 
         divdiv.innerHTML = "<ol class=\"list-group \">\n"
-
-
-        if (this.distance.RF !== false) {
-
+        for(const metric_name in this.distance) {
             divdiv.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\n" +
                 "    <div class=\"ms-2 me-auto\">\n" +
-                "      <div class=\"fw-bold\" style=\"text-align:left;\">Robinson-Foulds</div>\n" +
-                "      <small>Left tree: {}/{} ({}%)\n <br>".format(this.distance.RF_good, this.distance.RF_left, Math.round(this.distance.RF_good /this.distance.RF_left*100) ) +
-                "      Right tree: {}/{} ({}%)\n".format(this.distance.RF_good, this.distance.RF_right, Math.round(this.distance.RF_good /this.distance.RF_right*100) ) +
-                "    </small> </div>\n" +
-                "    <span class=\"badge bg-primary rounded-pill\">{}</span>\n".format(this.distance.RF) +
-                "  </li>"
-        }
-
-
-
-        if (this.distance.clade !== false) {
-
-
-            divdiv.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\n" +
-                "    <div class=\"ms-2 me-auto\">\n" +
-                "      <div class=\"fw-bold\" style=\"text-align:left;\">Clade</div>\n" +
-                "      <small>Left tree: {}/{} ({}%)\n <br>".format(this.distance.Cl_good, this.distance.Cl_left, Math.round(this.distance.Cl_good /this.distance.Cl_left*100) ) +
-                "      Right tree: {}/{} ({}%)\n".format(this.distance.Cl_good, this.distance.Cl_right, Math.round(this.distance.Cl_good/this.distance.Cl_right*100) ) +
-                "    </small> </div>\n" +
-                "    <span class=\"badge bg-primary rounded-pill\">{}</span>\n".format(this.distance.clade) +
-                "  </li>"
-
-
-        }
-
-        if (this.distance.Euc !== false) {
-
-            divdiv.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\n" +
-                "    <div class=\"ms-2 me-auto\">\n" +
-                "      <div class=\"fw-bold\" style=\"text-align:left;\">Euclidian</div> </div>\n" +
-                "    <span class=\"badge bg-primary rounded-pill\">{}</span>\n".format(this.distance.Euc) +
+                "      <div class=\"fw-bold\" style=\"text-align:left;\">{}</div></div>\n".format(metric_name) +
+                "    <span class=\"badge bg-primary rounded-pill\">{}</span>\n".format(this.distance[metric_name]) +
                 "  </li>"
         }
 
@@ -593,7 +561,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     }
 
-*/
+
 
 
 }
