@@ -14,7 +14,7 @@
 
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-    <script src="./phylo.js"></script>
+    <script src="../../dist/phylo.js"></script>
 </head>
 
 
@@ -306,14 +306,16 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Phylo.io help center</h5>
+                    <h5 class="modal-title"> Powered by Phylo.io</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Help section is under construction
+                    Made by Pedro Gardete and Francisco Ludovico as our final BSc project @ ISEL
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  class="btn btn-primary" data-bs-dismiss="modal">I'm done!</button>
+                    <button type="button"  class="btn btn-primary" data-bs-dismiss="modal">
+                        Done
+                    </button>
                 </div>
             </div>
         </div>
@@ -327,7 +329,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p> Here, you will make a screenshot of the current phylo.io view. This means that if the compare mode is activated it will
+                    <p> Here, you will make a screenshot of the current view. This means that if the compare mode is activated it will
                         export as image both viewers. If you want each individual viewer to be exported as single image please use  <i class=" fas fa-download " style="color: rgb(136, 136, 136);"></i> at the top righ of
                         each viewers.</p>
 
@@ -443,8 +445,8 @@
     };
 
     document.getElementById("menu_distance").onclick = function() {
-        phylo.settings.compute_distance = true;
-        phylo.compute_distance()
+        phylo.settings.compute_metrics = true;
+        phylo.compute_metrics()
     };
 
     document.getElementById("menu_lock").onclick = function() {
