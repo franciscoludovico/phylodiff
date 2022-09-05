@@ -15,7 +15,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.containers = {}; // {container id -> Container() }
         this.last_models = {
             'container0' : -1,
-            'container1' : -1
+            'container1' : -1,
+            'results_id' : function (){return '' +this.container0 + '-' + this.container1 }
         }
         this.bound_container = []
         this.session_token = null
@@ -25,26 +26,13 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             'intersect' : false,
             'include' : false
         }
-        this.distance = {
-            /*
-            'RF' : false,
-            "Euc": false,
-            "clade": false,
-            "RF_good" : false,
-            "RF_left" : false,
-            "RF_right" : false,
-            "Cl_good" : false,
-            "Cl_left" : false,
-            "Cl_right" : false,
-            */
-        }
+        this.distance = new HashMap()
         this.settings = {
             'phylostratigraphy' : false,
             'share_phylo': 'https://zoo.vital-it.ch/viewer/',
             'share_post': 'https://zoo.vital-it.ch/sharing/create/',
             'share_get': 'https://zoo.vital-it.ch/sharing/load/?session=',
             'no_distance_message': true,
-            //'compute_distance': false,
             'compute_metrics':false,
             'sync_zoom': false,
             'syncing_zoom': false,
@@ -69,8 +57,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.session_token = null
         this.session_url = null
         this.phylo_embedded = false
-        this.distance = {
-        };
+        this.distance = new HashMap();
         let default_settings = {
             'no_distance_message': true,
             'compute_distance': false,
@@ -184,7 +171,18 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     async lookup_custom_metrics(filename) {
         const {metrics} = await import("./metric_modules/" + filename + ".js")
-        metrics.forEach(metric => metric.compute())
+        metrics.forEach( metric => {
+            if(metric.hasOwnProperty("name") && metric.hasOwnProperty("compute") && metric.hasOwnProperty("compute") &&
+                ((metric.hasOwnProperty("highlight_settings") && metric.hasOwnProperty("full_name")) || !metric.hasOwnProperty("highlight_settings"))){
+                this.metrics.push(metric)
+            }{
+                //should be window with warning
+                //if the custom metric doesn't meet the minimum requirements it won't be added
+                console.log("Custom metric missing important properties!\n")
+                console.log(metric)
+            }
+        })
+
     }
 
     compute_metrics(){
@@ -192,12 +190,12 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             return
         }
 
-        var mod1 = this.bound_container[0].models[this.bound_container[0].current_model]
-        var mod2 = this.bound_container[1].models[this.bound_container[1].current_model]
+        const mod1 = this.bound_container[0].models[this.bound_container[0].current_model]
+        const mod2 = this.bound_container[1].models[this.bound_container[1].current_model]
 
         if(mod1.uid !== this.last_models.container0 || mod2.uid !== this.last_models.container1){
-            let deep_leaf_list_1 = this.bound_container[0].models[this.bound_container[0].current_model].deep_leaf_list
-            let deep_leaf_list_2 = this.bound_container[1].models[this.bound_container[1].current_model].deep_leaf_list
+            let deep_leaf_list_1 = mod1.deep_leaf_list
+            let deep_leaf_list_2 = mod2.deep_leaf_list
 
             if (deep_leaf_list_2.length > deep_leaf_list_1.length) {
                 let temp = deep_leaf_list_2
@@ -229,13 +227,10 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         }
 
         const available_metrics = this.metrics.filter(metric => {
-                const filtered_conditions = metric.conditions.filter(condition => {
-                    if (this.leaf_info.hasOwnProperty(condition)) {
-                        return this.leaf_info[condition]
-                    }
-                    return false
-                })
-                return metric.conditions.length === filtered_conditions.length
+                for(const condition in metric.conditions){
+                    if(metric.conditions[condition] !== this.leaf_info[condition]) return false
+                }
+                return true
             }
         )
 
@@ -272,42 +267,6 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 mod.settings.style.color_extent_min[label] = highlight_settings.color_extent_min;
             }
         }
-        /*
-        this.metrics.forEach(metric => {
-            if(!metric.conditions.filter(condition =>{
-                    if(this.leaf_info.hasOwnProperty(condition)){
-                        return !this.leaf_info[condition]
-                    }
-                    return true
-            })){
-                const result = metric.compute(mod1,mod2,this.id_set)
-                this.distance[metric.name] = result
-            }
-        })
-         */
-
-        //var leaves1 = mod1.hierarchy_mockup.leaves().map(x => x.data.name);
-        //var leaves2 = mod2.hierarchy_mockup.leaves().map(x => x.data.name);
-        //TODO Should know available metrics on tree add
-        //TODO Model Settings and api settings
-        /*
-        var intersection = leaves1.filter(value => leaves2.includes(value));
-        if (intersection.length == 0){
-
-            this.settings.no_distance_message = "No leaves in common."
-            this.distance.Euc = false
-            this.distance.RF = false
-            this.distance.clade = false
-
-            if (this.phylo_embedded){
-                this.display_distance_window()
-            }
-            return
-        }
-        */
-        //mod1.createDeepLeafList()
-
-
 
     }
 
@@ -475,6 +434,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     }
 
+     */
+
     screen_shot(params){screen_shot(params)}
 
     generate_share_link(){
@@ -529,7 +490,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     }
 
-     */
+
 
     display_distance_window(){
 

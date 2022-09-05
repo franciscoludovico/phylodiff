@@ -827,7 +827,7 @@ export default class Interface {
             .attr("dy", ".2em")
             .text(() => {
                 var ms = this.viewer.model.settings.style;
-                return ms.color_accessor ? ms.color_accessor : "Topology"
+                return ms.color_accessor ? ms.color_accessor : ""
 
 
             })
@@ -1493,7 +1493,7 @@ export default class Interface {
             .style('float','right')
             .on('change', function(){
 
-                that.viewer.model.settings.style.color_accessor =  this.value === 'Topology' ? null : this.value;
+                that.viewer.model.settings.style.color_accessor =  this.value === '' ? null : this.value;
                 that.viewer.set_color_scale();
                 that.viewer.render(that.viewer.hierarchy)
 
@@ -1506,7 +1506,7 @@ export default class Interface {
 
         var color_label = Array.from(this.viewer.model.settings.colorlabels)
 
-        var options = ["Topology"]
+        var options = []
         options = options.concat(color_label)
 
         selectcoloring.selectAll('option').data(options).enter().append('option').attr('value', function (d) { return d; }).text(function (d) { return d; });

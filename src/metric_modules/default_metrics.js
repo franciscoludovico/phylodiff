@@ -15,7 +15,9 @@ metrics.push(
         full_name: "Robinson-Foulds distance",
         compute: compute_RF_distance,
         description: "Under construction",
-        conditions: ["intersect"],
+        conditions: {
+            'intersect' : true
+        },
         highlight_settings: {label:"RDF",color_extent_min: 0,color_extent_max: 1},
         ref: "link"
     }
@@ -27,7 +29,9 @@ metrics.push(
         full_name: "Weighted Robinson-Foulds",
         compute: compute_WRF_distance,
         description: "Under construction",
-        conditions: ["intersect"],
+        conditions: {
+            'intersect' : true
+        },
         highlight_settings: {label:"Length",color_extent_min: null,color_extent_max: null},
         ref: "link"
     }
@@ -39,7 +43,10 @@ metrics.push(
         full_name: "Generalized Robinson-Foulds",
         compute: compute_GRF_distance,
         description: "Under construction",
-        conditions: ["include"],
+        conditions: {
+            'intersect' : false,
+            'include' : true
+        },
         highlight_settings: {label:"GRF",color_extent_min: 0,color_extent_max: 1},
         ref: "link"
     }
