@@ -17,8 +17,8 @@ Then, you just to need open our application file available at
 and drag it to your favorite browser.
 
 ## Adding new comparison measures: 
-To add new comparison measures to our library, simply head over to the file available at [phylodiff/blob/metric_modules/lookup-test.js](https://github.com/franciscoludovico/phylodiff/blob/main/src/metric_modules/lookup-test.js)
-and push and object with the following structure into our metrics array. Mandatory parameters are marked with a *:
+To add new comparison measures to our library, simply head over to the file available at [phylodiff/metric_modules/lookup-test.js](https://github.com/franciscoludovico/phylodiff/blob/main/src/metric_modules/lookup-test.js)
+and push an object with the following structure into our metrics array. Mandatory parameters are marked with a *:
 
 ```js
 {
