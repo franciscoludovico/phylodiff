@@ -234,8 +234,9 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             }
         )
 
+        const results = this.distance.has(this.last_models.results_id()) ? this.distance.get(this.last_models.results_id()) : {}
         available_metrics.forEach(metric => {
-            this.distance[metric.full_name] = metric.compute(mod1,mod2,this.id_set)
+            results[metric.full_name] = results.hasOwnProperty(metric.full_name) ? results[metric.full_name] : metric.compute(mod1,mod2,this.id_set)
             if(metric.hasOwnProperty('highlight_settings')){
                 new_highlight_label(mod1,metric.highlight_settings)
                 new_highlight_label(mod2,metric.highlight_settings)
@@ -244,7 +245,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
                 mod2.settings.style.color_accessor = metric.highlight_settings.label
                  */
             }
-        } )
+        })
+        this.distance.set(this.last_models.results_id(),results)
 
         /*
         this.bound_container[0].viewer.set_color_scale();
@@ -499,11 +501,12 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         var divdiv = document.getElementById("mydivbody");
 
         divdiv.innerHTML = "<ol class=\"list-group \">\n"
-        for(const metric_name in this.distance) {
+        const results = this.distance.get(this.last_models.results_id())
+        for(const metric_name in results ) {
             divdiv.innerHTML += "<li class=\"list-group-item d-flex justify-content-between align-items-start\">\n" +
                 "    <div class=\"ms-2 me-auto\">\n" +
                 "      <div class=\"fw-bold\" style=\"text-align:left;\">{}</div></div>\n".format(metric_name) +
-                "    <span class=\"badge bg-primary rounded-pill\">{}</span>\n".format(this.distance[metric_name]) +
+                "    <span class=\"badge bg-primary rounded-pill\">{}</span>\n".format(results[metric_name]) +
                 "  </li>"
         }
 
