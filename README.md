@@ -8,7 +8,11 @@ properties.
 Videos with some demonstrations of our application are available [here](https://beta.phylo.io/).
 
 ## Quick Start
-**Local build:** You can build the package using the following command
+**Local build:** You can build the package using the following commands
+````bash
+npm start
+````
+and then
 ```bash
 npm run-script build
 ```
