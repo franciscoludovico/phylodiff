@@ -69,7 +69,7 @@ if(this.available_metrics.GRF && this.leaf_info.include && !this.leaf_info.inter
  */
 
 function compute_RF_distance(mod1, mod2, id_set) {
-    const label = 'RDF'
+    const label = 'RDF/' + mod1.uid + "-" + mod2.uid
     var cl_tree1 = mod1.get_clusters_rf(id_set,label)
     var cl_tree2 = mod2.get_clusters_rf(id_set,label)
 
@@ -121,7 +121,7 @@ function compute_WRF_distance(mod1, mod2, id_set) {
 
 function compute_GRF_distance(mod1, mod2, id_set) {
 
-    const label = 'GRF'
+    const label = 'GRF/' + mod1.uid + "-" + mod2.uid
     var cl_tree1 = mod1.get_clusters_rf(id_set,label)
     var cl_tree2 = mod2.get_clusters_rf(id_set,label)
     var max_shared_clusters = cl_tree1.size

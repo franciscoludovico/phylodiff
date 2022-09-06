@@ -196,7 +196,10 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         if(mod1.uid !== this.last_models.container0 || mod2.uid !== this.last_models.container1){
             let deep_leaf_list_1 = mod1.deep_leaf_list
             let deep_leaf_list_2 = mod2.deep_leaf_list
-
+            this.leaf_info = {
+                'intersect' : false,
+                'include' : false
+            }
             if (deep_leaf_list_2.length > deep_leaf_list_1.length) {
                 let temp = deep_leaf_list_2
                 deep_leaf_list_2 = deep_leaf_list_1
@@ -228,7 +231,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
         const available_metrics = this.metrics.filter(metric => {
                 for(const condition in metric.conditions){
-                    if(metric.conditions[condition] !== this.leaf_info[condition]) return false
+                    if(!this.leaf_info.hasOwnProperty(condition) || metric.conditions[condition] !== this.leaf_info[condition]) return false
                 }
                 return true
             }
@@ -238,8 +241,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         available_metrics.forEach(metric => {
             results[metric.full_name] = results.hasOwnProperty(metric.full_name) ? results[metric.full_name] : metric.compute(mod1,mod2,this.id_set)
             if(metric.hasOwnProperty('highlight_settings')){
-                new_highlight_label(mod1,metric.highlight_settings)
-                new_highlight_label(mod2,metric.highlight_settings)
+                new_highlight_label(mod1,mod2,metric.highlight_settings)
                 /*
                 mod1.settings.style.color_accessor = metric.highlight_settings.label
                 mod2.settings.style.color_accessor = metric.highlight_settings.label
@@ -260,13 +262,19 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
         this.display_distance_window()
 
-        function new_highlight_label(mod,highlight_settings) {
-            var label = highlight_settings.label
-            if(!mod.settings.labels.has(label)) {
-                mod.settings.labels.add(label)
-                mod.settings.colorlabels.add(label)
-                mod.settings.style.color_extent_max[label] = highlight_settings.color_extent_max;
-                mod.settings.style.color_extent_min[label] = highlight_settings.color_extent_min;
+        function new_highlight_label(mod1,mod2,highlight_settings) {
+            const label = highlight_settings.label + '/' + mod1.uid + '-' + mod2.uid
+            if(!mod1.settings.labels.has(label)) {
+                mod1.settings.labels.add(label)
+                mod1.settings.colorlabels.add(label)
+                mod1.settings.style.color_extent_max[label] = highlight_settings.color_extent_max;
+                mod1.settings.style.color_extent_min[label] = highlight_settings.color_extent_min;
+            }
+            if(!mod2.settings.labels.has(label)) {
+                mod2.settings.labels.add(label)
+                mod2.settings.colorlabels.add(label)
+                mod2.settings.style.color_extent_max[label] = highlight_settings.color_extent_max;
+                mod2.settings.style.color_extent_min[label] = highlight_settings.color_extent_min;
             }
         }
 
