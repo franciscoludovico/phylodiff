@@ -1,0 +1,1 @@
+((dog:20,cat:10):20, (elephant:30, horse:60):20)
