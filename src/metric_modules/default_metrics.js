@@ -2,7 +2,8 @@ const HashMap = require("hashmap");
 
 
 const metrics = []
-/*
+
+/* Phylodiff
 * We decide which metrics can be calculated based on their leaf information
 * R&F and Weighed R&F can be calculated if the leaf sets of both trees intersect themselves
 * Generalized R&F can be calculated if the leaf sets of both trees don't intersect themselves and one of those

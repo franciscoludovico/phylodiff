@@ -115,7 +115,7 @@ export default class Model {
 
         }
 
-        /*
+        /* Phylodiff
         * Adds an id to each of the nodes of a tree
         * Adds to each node a function to get the next node (prefix way)
         * Creates a list with the info about each leaf (terminal and external) of a tree
@@ -195,7 +195,7 @@ export default class Model {
         return o
     }
 
-    /*
+    /* Phylodiff
     * Traverses the tree in a prefix way to get the tree clusters
     * Also has in account the internal nodes of the trees
     * */
@@ -226,7 +226,7 @@ export default class Model {
         return cluster_map
     }
 
-    /*
+    /* Phylodiff
     * Also traverses the tree in a prefix way
     * Based on the same logic as get_clusters_rf but associates the length of the cluster's branch to a map
     * */

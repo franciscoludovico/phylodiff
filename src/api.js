@@ -13,20 +13,20 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     constructor() {
         this.containers = {}; // {container id -> Container() }
-        this.last_models = {
+        this.last_models = { // Phylodiff - keeps track of the last models used for computing
             'container0' : -1,
             'container1' : -1,
-            'results_id' : function (){return '' +this.container0 + '-' + this.container1 }
+            'results_id' : function (){return '' +this.container0 + '-' + this.container1 } // Phylodiff - used as an indexing tool
         }
         this.bound_container = []
         this.session_token = null
         this.session_url = null
         this.phylo_embedded = false
-        this.leaf_info = {
+        this.leaf_info = { // Phylodiff - contains information about the trees from the current models
             'intersect' : false,
             'include' : false
         }
-        this.distance = new HashMap()
+        this.distance = new HashMap() // Phylodiff - gathers metric results for every model combination
         this.settings = {
             'phylostratigraphy' : false,
             'share_phylo': 'https://zoo.vital-it.ch/viewer/',
@@ -39,8 +39,8 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             "compareMode" : false, // compare for each pair of tree topological similarity
         };
         this.undoing = false;
-        this.id_set = {};
-        this.metrics = default_metrics.metrics
+        this.id_set = {}; // Phylodiff - information from both trees, used to calculate metrics
+        this.metrics = default_metrics.metrics // Phylodiff - contains information about the trees from the current models
     }
 
     reset(){ // !!!! KEEP ATTR UPDATED BETWEEN init and reset TODO AUTO THAT
@@ -169,10 +169,19 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
     }
 
 
+    /*
+        Phylodiff
+        lookup_custom_metrics as the name implies is a function to lookup modules with new metrics.
+        The file should be on the folder ./metric_modules
+        Any metric that is added should have a couple of default properties otherwise it won't work as intended.
+        The basic properties are name, compute and conditions. If highlight_settings property exists so should the full_name property.
+        This function does not check if the correct types are assigned to the properties it only checks if those properties exist.
+     */
+
     async lookup_custom_metrics(filename) {
         const {metrics} = await import("./metric_modules/" + filename + ".js")
         metrics.forEach( metric => {
-            if(metric.hasOwnProperty("name") && metric.hasOwnProperty("compute") && metric.hasOwnProperty("compute") &&
+            if(metric.hasOwnProperty("name") && metric.hasOwnProperty("compute") && metric.hasOwnProperty("conditions") &&
                 ((metric.hasOwnProperty("highlight_settings") && metric.hasOwnProperty("full_name")) || !metric.hasOwnProperty("highlight_settings"))){
                 this.metrics.push(metric)
             }{
@@ -185,11 +194,18 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
 
     }
 
+    /*
+        Phylodiff
+        Our version of the compute_distance function from Phyloio.
+     */
     compute_metrics(){
+
+        //Checks if there are any models in the containers.
         if (this.bound_container[0].models.length == 0 || this.bound_container[1].length == 0) {
             return
         }
 
+        //If the models are not the same ones used on the last call it recomputes the id_set and leaf_info.
         const mod1 = this.bound_container[0].models[this.bound_container[0].current_model]
         const mod2 = this.bound_container[1].models[this.bound_container[1].current_model]
 
@@ -229,6 +245,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             this.last_models.container1 = mod2.uid
         }
 
+        //Based on the leaf_info and conditions of each metric we gather the available metrics for the selected trees.
         const available_metrics = this.metrics.filter(metric => {
                 for(const condition in metric.conditions){
                     if(!this.leaf_info.hasOwnProperty(condition) || metric.conditions[condition] !== this.leaf_info[condition]) return false
@@ -237,6 +254,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
             }
         )
 
+        //We compute the trees once and save the results so that on further calls we don't need to compute them again.
         const results = this.distance.has(this.last_models.results_id()) ? this.distance.get(this.last_models.results_id()) : {}
         available_metrics.forEach(metric => {
             results[metric.full_name] = results.hasOwnProperty(metric.full_name) ? results[metric.full_name] : metric.compute(mod1,mod2,this.id_set)
@@ -257,9 +275,11 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.bound_container[1].viewer.render(this.bound_container[1].viewer.hierarchy)
         */
 
+        //The interface is updated so that any new highlight labels are added.
         this.bound_container[0].interface = new Interface(this.bound_container[0].viewer,this.bound_container[0])
         this.bound_container[1].interface = new Interface(this.bound_container[1].viewer,this.bound_container[1])
 
+        //Displays the results.
         this.display_distance_window()
 
         function new_highlight_label(mod1,mod2,highlight_settings) {
