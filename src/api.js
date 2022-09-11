@@ -283,7 +283,7 @@ export default class API { // todo ultime ! phylo is used ase reference from .ht
         this.display_distance_window()
 
         function new_highlight_label(mod1,mod2,highlight_settings) {
-            const label = highlight_settings.label + '/' + mod1.uid + '-' + mod2.uid
+            const label = highlight_settings.label === "Length" ? highlight_settings.label : highlight_settings.label + '/' + mod1.uid + '-' + mod2.uid
             if(!mod1.settings.labels.has(label)) {
                 mod1.settings.labels.add(label)
                 mod1.settings.colorlabels.add(label)
