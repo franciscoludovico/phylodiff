@@ -5,7 +5,7 @@ comparison measures to it, by providing an object to it, with mandatory and non-
 properties.
 
 ## Demo
-Videos with some demonstrations of our application are available [here](https://beta.phylo.io/).
+Videos with some demonstrations of our application are available [here](https://youtu.be/7y6bkxLBt20).
 
 ## Quick Start
 **Local build:** You can build the package using the following commands
