@@ -3,6 +3,7 @@ PhyloDiff is a library that extends [Phylo.io](https://github.com/DessimozLab/ph
 pair of two phylogenetic trees. Another feature of this library is the ability to easily add new
 comparison measures to it, by providing an object to it, with mandatory and non-mandatory
 properties.
+The project was supported by a research project from Polytechnic Institute of Lisbon  - IPL/2021/DIVA_ISEL
 
 ## Demo
 Videos with some demonstrations of our application are available [here](https://youtu.be/7y6bkxLBt20).
